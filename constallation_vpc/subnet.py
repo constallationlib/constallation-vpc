@@ -24,7 +24,8 @@ class Subnet(_vpc):
         self._initualize_subnet()
 
     def _initualize_subnet(self):
-        print(super().describe_subnet(s))
+        if self._subnet_id is not None:
+            super().describe_subnet(self._subnet_id)
 
 
 if __name__ == '__main__':
