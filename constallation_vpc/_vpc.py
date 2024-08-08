@@ -1,13 +1,13 @@
 import subprocess as _subprocess
 
 class _vpc:
-    def __init__(self, region_name: str = None, vpc_id: str = None, subnet_id: str = None, 
-                 access_key: str = None, secret_key: str = None, session_token: str = None):
+    def __init__(self, region_name: str = None, vpc_id: str = None, subnet_id: str = None,
+                 aws_access_key: str = None, aws_access_secret_key: str = None, session_token: str = None):
         self.region_name = region_name
         self._vpc_id = vpc_id
         self._subnet_id = subnet_id
-        self._access_key = access_key
-        self._secret_key = secret_key
+        self._access_key = aws_access_key
+        self._secret_key = aws_access_secret_key
         self._session_token = session_token
 
     def _run_aws_cli_command(self, command: list) -> dict:
