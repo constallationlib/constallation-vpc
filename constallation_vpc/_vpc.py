@@ -1,9 +1,9 @@
 import subprocess as _subprocess
 
 class _vpc:
-    def __init__(self, region_name: str = None, vpc_id: str = None, subnet_id: str = None,
+    def __init__(self, region: str = None, vpc_id: str = None, subnet_id: str = None,
                  aws_access_key: str = None, aws_access_secret_key: str = None, aws_sts_session_token: str = None):
-        self.region_name = region_name
+        self.region_name = region
         self._vpc_id = vpc_id
         self._subnet_id = subnet_id
         self._access_key = aws_access_key
@@ -18,7 +18,7 @@ class _vpc:
             command.extend(['--access-key', self._access_key, '--secret-key', self._secret_key])
         if self._session_token:
             command.extend(['--session-token', self._session_token])
-        
+
         result = _subprocess.run(command, capture_output=True, text=True)
         if result.returncode != 0:
             raise Exception(f"Error: {result.stderr}")
@@ -55,7 +55,7 @@ class _vpc:
             raise ValueError("subnet_id must be specified to delete a subnet")
         command = ['ec2', 'delete-subnet', '--subnet-id', self._subnet_id]
         return self._run_aws_cli_command(command)
-    
+
     def modify_vpc_attribute(self, enable_dns_support: bool = None, enable_dns_hostnames: bool = None) -> dict:
         if not self._vpc_id:
             raise ValueError("vpc_id must be specified to modify a VPC attribute")
@@ -126,10 +126,10 @@ class _vpc:
     def describe_vpc_peering_connections(self) -> dict:
         command = ['ec2', 'describe-vpc-peering-connections']
         if self._vpc_id:
-            command.extend(['--filters', f'Name=requester-vpc-info.vpc-id,Values={self._vpc_id}', 
+            command.extend(['--filters', f'Name=requester-vpc-info.vpc-id,Values={self._vpc_id}',
                             f'Name=accepter-vpc-info.vpc-id,Values={self._vpc_id}'])
         return self._run_aws_cli_command(command)
-    
+
     def create_internet_gateway(self) -> dict:
         command = ['ec2', 'create-internet-gateway']
         return self._run_aws_cli_command(command)
