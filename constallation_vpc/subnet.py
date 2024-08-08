@@ -4,7 +4,7 @@ class Subnet(_vpc):
     def __init__(self, region:str, subnet_id:str=None, avalibility_zone:str=None,
                  cidr_block:str=None, ipv6_cidr_block:str=None, vpc_id:str=None,
                  assign_ipv6_address_on_creation:bool=None, map_public_ip_on_creation:bool=None,
-                 tags:dict=None, ):
+                 tags:dict=None, aws_access_key:str=None, aws_access_secret_key:str=None, aws_sts_token:str=None):
         self._subnet_id = subnet_id
         self._avalibility_zone = avalibility_zone
         self._cidr_block = cidr_block
