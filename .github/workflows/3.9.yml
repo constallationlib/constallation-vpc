@@ -1,9 +1,6 @@
 name: Poetry Build (3.9)
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
