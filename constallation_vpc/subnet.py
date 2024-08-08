@@ -34,5 +34,66 @@ class Subnet(_vpc):
             self._private_dns_name_options_on_launch = subnet.get('PrivateDnsNameOptionsOnLaunch')
 
 
+    @property
+    def availability_zone(self):
+        return self._availability_zone
+
+    @property
+    def availability_zone_id(self):
+        return self._availability_zone_id
+
+    @property
+    def available_ip_address_count(self):
+        return self._available_ip_address_count
+
+    @property
+    def cidr_block(self):
+        return self._cidr_block
+
+    @property
+    def default_for_az(self):
+        return self._default_for_az
+
+    @property
+    def map_public_ip_on_launch(self):
+        return self._map_public_ip_on_launch
+
+    @property
+    def map_customer_owned_ip_on_launch(self):
+        return self._map_customer_owned_ip_on_launch
+
+    @property
+    def state(self):
+        return self._state
+
+    @property
+    def subnet_id(self):
+        return self._subnet_id
+
+    @property
+    def vpc_id(self):
+        return self._vpc_id
+
+    @property
+    def owner_id(self):
+        return self._owner_id
+
+    @property
+    def assign_ipv6_address_on_creation(self):
+        return self._assign_ipv6_address_on_creation
+
+    @property
+    def ipv6_cidr_block_association_set(self):
+        return self._ipv6_cidr_block_association_set
+
+    @property
+    def ipv6_native(self):
+        return self._ipv6_native
+
+    @property
+    def private_dns_name_options_on_launch(self):
+        return self._private_dns_name_options_on_launch
+
+
 if __name__ == '__main__':
     x = Subnet(region='us-west-2', subnet_id='subnet-0c0036e53c417c552')
