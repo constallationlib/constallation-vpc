@@ -16,3 +16,4 @@ class VPC(_vpc):
             print(super()._describe_vpc(self._vpc_id))
 
 if __name__ == '__main__':
+vpc = VPC('us-east-1')
