@@ -1,4 +1,5 @@
 from _vpc import _vpc
+from errors import ErrorHandler
 
 class Subnet(_vpc):
     def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None, aws_access_secret_key:str=None, aws_sts_session_token:str=None,
@@ -11,6 +12,7 @@ class Subnet(_vpc):
         self._vpc_id = vpc_id
         self._cidr_block = cidr_block
         self._availability_zone = availability_zone
+        self._error_handler = None
 
         super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key, aws_sts_session_token=self._aws_sts_token)
         del self._aws_sts_token, self._aws_access_key, self._aws_access_secret_key
