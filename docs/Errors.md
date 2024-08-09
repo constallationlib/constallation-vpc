@@ -1,5 +1,36 @@
 # Errors
 
+| **Table of Contents**                                      | **Description**                            |
+|------------------------------------------------------------|--------------------------------------------|
+| [SubnetError](#subneterror)                                | Base class for all Subnet-related errors   |
+| [SubnetError.SubnetCIDRConflicts](#subnetcidrconflicts)    | Raised when a subnet CIDR conflicts        |
+| [SubnetError.SubnetRangeError](#subnetrangeerror)          | Raised when a subnet IP range is invalid   |
+| [SubnetError.SubnetIDNotFound](#subnetidnotfound)          | Raised when a subnet ID is not found       |
+| [SubnetError.SubnetZoneMismatch](#subnetzonemismatch)      | Raised when a subnet is in the wrong zone  |
+| [SubnetError.SubnetInUse](#subnetinuse)                    | Raised when a subnet is in use             |
+| [SubnetError.SubnetAssociationError](#subnetassociationerror) | Raised when a subnet association fails  |
+| [SubnetError.SubnetDependentServiceError](#subnetdependentserviceerror) | Raised when a subnet is used by a dependent service |
+| [SubnetError.SubnetAttachmentError](#subnetattachmenterror) | Raised when a subnet attachment fails   |
+| [VPCError](#vpcerror)                                      | Base class for all VPC-related errors      |
+| [VPCError.VPCCIDRConflicts](#vpccidrconflicts)             | Raised when a VPC CIDR conflicts           |
+| [VPCError.VPCIDNotFound](#vpcidnotfound)                   | Raised when a VPC ID is not found          |
+| [VPCError.VPCInUse](#vpcinuse)                             | Raised when a VPC is in use                |
+| [VPCError.VPCDependentServiceError](#vpcdependentserviceerror) | Raised when a VPC is used by a dependent service |
+| [VPCError.VPCAttachmentError](#vpcattachmenterror)         | Raised when a VPC attachment fails         |
+| [General AWS Errors](#general-aws-errors)                  | General AWS errors                         |
+| [AccessDeniedError](#accessdeniederror)                    | Raised when access is denied               |
+| [AuthFailureError](#authfailureerror)                      | Raised when authentication fails           |
+| [RequestLimitExceededError](#requestlimitexceedederror)    | Raised when request limit is exceeded      |
+| [ThrottlingExceptionError](#throttlingexceptionerror)      | Raised when a request is throttled         |
+| [ResourceNotFoundExceptionError](#resourcenotfoundexceptionerror) | Raised when a resource is not found |
+| [InvalidParameterValueError](#invalidparametervalueerror)  | Raised when a parameter is invalid         |
+| [ServiceUnavailableError](#serviceunavailableerror)        | Raised when the service is unavailable     |
+| [InternalFailureError](#internalfailureerror)              | Raised when an internal failure occurs     |
+| [ValidationExceptionError](#validationexceptionerror)      | Raised when input fails validation         |
+| [InvalidClientTokenIdError](#invalidclienttokeniderror)    | Raised when a token is invalid             |
+| [OptInRequiredError](#optinrequirederror)                  | Raised when opt-in is required             |
+
+---
 
 ## <span style="color: purple;">SubnetError</span>
 `SubnetError` is a base class for all Subnet-related exceptions. It encapsulates the common behavior and attributes that specific Subnet exceptions inherit.
