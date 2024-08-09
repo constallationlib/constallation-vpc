@@ -13,7 +13,6 @@ class SubnetCIDRConflicts(SubnetError):
             formatted_message = f"The CIDR {cidr} conflicts with another subnet"
         else:
             formatted_message = "The CIDR conflicts with another subnet"
-
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
 
@@ -24,7 +23,6 @@ class SubnetRangeError(SubnetError):
             formatted_message = f"The IP range {ip_range} is invalid or out of range"
         else:
             formatted_message = "The IP range is invalid or out of range"
-
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Range"
 
@@ -64,7 +62,46 @@ class SubnetAttachmentError(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Attachment"
 
-# General AWS Errors
+class VPCError(Exception):
+    def __init__(self, operation, message, *args):
+        self.operation = operation
+        self.message = message
+        super().__init__(message, *args)
+
+class VPCCIDRConflicts(VPCError):
+    def __init__(self, operation, original_message, *args):
+        if (cidr_match := _re.search(r"'(.*?)'", original_message)):
+            cidr = cidr_match.group(1)
+            formatted_message = f"The CIDR {cidr} conflicts with another VPC"
+        else:
+            formatted_message = "The CIDR conflicts with another VPC"
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpc.Conflict"
+
+class VPCIDNotFound(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified VPC ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpc.ID.NotFound"
+
+class VPCInUse(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The VPC is currently in use and cannot be modified or deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpc.InUse"
+
+class VPCDependentServiceError(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The VPC is being used by a dependent service and cannot be modified or deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpc.DependentService"
+
+class VPCAttachmentError(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "There was an error attaching the VPC to the specified resource."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpc.Attachment"
+
 class AccessDeniedError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "Access denied. You do not have the necessary permissions for this operation."
@@ -133,10 +170,7 @@ class OptInRequiredError(Exception):
 
 class ErrorHandler:
     def parse_and_raise(self, error):
-        # Extract the error message
         error_message = error.get('Error', '')
-
-        # Use _regex to extract the error code and operation from the error message
         code_match = _re.search(r'\((.*?)\)', error_message)
         operation_match = _re.search(r'when calling the (.*?) operation', error_message)
 
@@ -160,6 +194,16 @@ class ErrorHandler:
                 raise SubnetDependentServiceError(operation, error_message)
             elif error_code == "InvalidSubnet.Attachment":
                 raise SubnetAttachmentError(operation, error_message)
+            elif error_code == "InvalidVpc.Conflict":
+                raise VPCCIDRConflicts(operation, error_message)
+            elif error_code == "InvalidVpc.ID.NotFound":
+                raise VPCIDNotFound(operation, error_message)
+            elif error_code == "InvalidVpc.InUse":
+                raise VPCInUse(operation, error_message)
+            elif error_code == "InvalidVpc.DependentService":
+                raise VPCDependentServiceError(operation, error_message)
+            elif error_code == "InvalidVpc.Attachment":
+                raise VPCAttachmentError(operation, error_message)
             elif error_code == "AccessDenied":
                 raise AccessDeniedError(operation, error_message)
             elif error_code == "AuthFailure":
@@ -183,6 +227,6 @@ class ErrorHandler:
             elif error_code == "OptInRequired":
                 raise OptInRequiredError(operation, error_message)
             else:
-                raise SubnetError(operation, error_message)
+                raise Exception(f"Unknown error occurred during {operation}: {error_message}")
         else:
-            raise SubnetError("UnknownOperation", error_message)
+            raise Exception("Unknown error occurred without specific details")
