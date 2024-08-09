@@ -8,11 +8,17 @@ subnet = Subnet(
     subnet_id = "example_id",
     aws_access_key = "example_key",
     aws_secret_access_key = "secret_example_key",
-    aws_sts_token = "example_token",
+    aws_sts_session_token = "example_token",
     vpc_id = "example_vpc_id",
     cidr_block = "10.0.0.0/24",
     availability_zone = 'us-west-2a'
 )
 ```
 - #### <span style="color: #DA70D6;">**Region**</span>
+  - The region you would like to query
+- #### <span style="color: #DA70D6;">**subnet_id**</span>
+  - 
+- #### <span style="color: #DA70D6;">**aws_access_key**</span>
+- #### <span style="color: #DA70D6;">**aws_secret_access_key**</span>
+- #### <span style="color: #DA70D6;">**aws_access**</span>
 - 
