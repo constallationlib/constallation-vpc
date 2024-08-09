@@ -145,6 +145,10 @@ class VPC(_vpc):
     def vpc_id(self):
         return self._vpc_id
 
+    @property
+    def subnets(self):
+        return self._get_subnets()
+
     def __del__(self):
         # Cleanup resources if needed
         for attr in list(self.__dict__.keys()):
