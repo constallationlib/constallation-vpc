@@ -135,6 +135,16 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _modify_subnet_attribute(self, subnet_id: str, attribute_name: str, attribute_value) -> dict:
+        cmd = [
+            "aws", "ec2", "modify-subnet-attribute",
+            "--subnet-id", subnet_id,
+            f"--{attribute_name}", str(attribute_value).lower(),
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
     def _create_default_vpc(self, subnet_name: str = "constallation-subnet") -> dict:
         cmd = [
             "aws", "ec2", "create-default-vpc",
