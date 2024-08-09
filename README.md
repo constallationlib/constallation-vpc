@@ -18,5 +18,14 @@
       - Association
       - DependentService
       - Attachment
-      - AccessDenied
-      - AuthFailure
+    - AccessDenied
+    - AuthFailure
+    - RequestLimitExceeded
+    - ThrottlingException
+    - ResourceNotFoundException
+    - InvalidParameterValue
+    - ServiceUnavailable
+    - InternalFailure
+    - ValidationException
+    - InvalidClientTokenId
+    - OptInRequired
