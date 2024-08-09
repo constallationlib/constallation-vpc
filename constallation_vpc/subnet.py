@@ -1,5 +1,5 @@
 from _vpc import _vpc
-from errors import ErrorHandler
+from errors import ErrorHandler, ConflictingCIDRError
 
 class Subnet(_vpc):
     def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None,
@@ -17,9 +17,9 @@ class Subnet(_vpc):
 
         super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key, aws_sts_session_token=self._aws_sts_token)
         del self._aws_sts_token, self._aws_access_key, self._aws_access_secret_key
-        self._initualize_subnet()
+        self._initialize_subnet()
 
-    def _initualize_subnet(self):
+    def _initialize_subnet(self):
         if self._subnet_id is not None:
             subnet = super()._describe_subnet(self._subnet_id)
             self._availability_zone = subnet.get('AvailabilityZone')
@@ -40,19 +40,19 @@ class Subnet(_vpc):
             self._ipv6_native = subnet.get('Ipv6Native')
             self._private_dns_name_options_on_launch = subnet.get('PrivateDnsNameOptionsOnLaunch')
         elif self._vpc_id is not None and self._cidr_block is not None and self._availability_zone is not None:
-            x = super()._create_subnet(self.vpc_id, self.cidr_block, self.availability_zone)
+            x = super()._create_subnet(self._vpc_id, self._cidr_block, self._availability_zone)
             if "Error" in x:
-                ErrorHandler.parse_and_raise(x)
+                self._error_handler.parse_and_raise(x)
             else:
                 self._subnet_id = x["SubnetId"]
                 self._cidr_block = x["CidrBlock"]
                 self._availability_zone = x["Subnet"]["AvailabilityZone"]
-                self._initualize_subnet()
+                self._initialize_subnet()
 
-    def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str):
-        x = super()._create_subnet(vpc_id, cidr_block, avalibility_zone)
+    def create_subnet(self, vpc_id:str, cidr_block:str, availability_zone:str):
+        x = super()._create_subnet(vpc_id, cidr_block, availability_zone)
         if "Error" in x:
-            ErrorHandler.parse_and_raise(x)
+            self._error_handler.parse_and_raise(x)
         else:
             return Subnet(
                 region=self._region,
@@ -66,9 +66,8 @@ class Subnet(_vpc):
         if subnet_id is not None:
             return super()._delete_subnet(subnet_id)
         else:
-            # Delete This Subnet Class (self)
-            return super().delete_subnet(self._subnet_id)
-
+            # Delete This Subnet Instance (self)
+            return super()._delete_subnet(self._subnet_id)
 
     @property
     def availability_zone(self):
@@ -124,13 +123,4 @@ class Subnet(_vpc):
 
     @property
     def ipv6_native(self):
-        return self._ipv6_native
-
-    @property
-    def private_dns_name_options_on_launch(self):
-        return self._private_dns_name_options_on_launch
-
-
-if __name__ == '__main__':
-    x = Subnet(region='us-west-2')
-    x.create_subnet("vpc-0558d8b24a783d976", "172.31.0.0/16", avalibility_zone="us-west-2d")
+        return s
