@@ -34,7 +34,7 @@ class ErrorHandler:
 
             # Raise the appropriate error based on the error code
             if error_code == "InvalidSubnet.Conflict":
-                raise InvalidSubnetCIDR(operation, error_message)
+                raise SubnetCIDRConflicts(operation, error_message)
             else:
                 raise SubnetError(operation, error_message)
         else:
