@@ -123,4 +123,13 @@ class Subnet(_vpc):
 
     @property
     def ipv6_native(self):
-        return s
+        return self._ipv6_native
+
+    @property
+    def private_dns_name_options_on_launch(self):
+        return self._private_dns_name_options_on_launch
+
+
+if __name__ == '__main__':
+    x = Subnet(region='us-west-2')
+    x.create_subnet("vpc-0558d8b24a783d976", "172.31.0.0/16", availability_zone="us-west-2d")
