@@ -18,7 +18,7 @@ class SubnetCIDRConflicts(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
 
-class SubnetRangeError(SubnetError):
+class InvalidCIDRRange(SubnetError):
     def __init__(self, operation, original_message, *args):
         range_match = _re.search(r"'(.*?)'", original_message)
         if range_match:
