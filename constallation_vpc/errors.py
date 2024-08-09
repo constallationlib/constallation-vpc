@@ -22,9 +22,9 @@ class InvalidSubnetCIDR(SubnetError):
 
 
 class ErrorHandler:
-    def parse_and_raise(self, error_dict):
+    def parse_and_raise(self, error):
         # Extract the error message
-        error_message = error_dict.get('Error', '')
+        error_message = error.get('Error', '')
 
         # Use regex to extract the error code and operation from the error message
         code_match = re.search(r'\((.*?)\)', error_message)

@@ -12,7 +12,7 @@ class Subnet(_vpc):
         self._vpc_id = vpc_id
         self._cidr_block = cidr_block
         self._availability_zone = availability_zone
-        self._error_handler = None
+        self._error_handler = ErrorHandler()
 
         super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key, aws_sts_session_token=self._aws_sts_token)
         del self._aws_sts_token, self._aws_access_key, self._aws_access_secret_key
@@ -43,7 +43,8 @@ class Subnet(_vpc):
 
     def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str) -> dict:
         x = super()._create_subnet(vpc_id, cidr_block, avalibility_zone)
-        print(x)
+        if "Error" in x:
+            ErrorHandler.parse_and_raise(x, )
         self._subnet_id = x["SubnetId"]
         self._cidr_block = x["CidrBlock"]
         self._availability_zone = x["Subnet"]["AvailabilityZone"]
