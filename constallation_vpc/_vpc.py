@@ -64,6 +64,13 @@ class _vpc:
         except (KeyError, IndexError):
             return {"Error": "Unexpected response structure"}
 
+    def _describe_subnets(self, subnets: list) -> dict:
+        subnets_description = {}
+        for subnet in subnets:
+            subnets_description[subnet["SubnetId"]] = {self._describe_subnet(subnet["SubnetId"]): subnet}
+        return subnets_description
+
+
     def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None) -> dict:
         cmd = [
             "aws", "ec2", "create-subnet",
