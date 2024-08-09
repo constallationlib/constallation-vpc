@@ -107,4 +107,53 @@ class VPC(_vpc):
             )
             initialized_subnets.append(subnet)
 
-        return initialized_subn
+        return initialized_subnets
+
+    @property
+    def cidr_block(self):
+        return self._cidr_block
+
+    @property
+    def cidr_block_association_set(self):
+        return self._cidr_block_association_set
+
+    @property
+    def dhcp_options_id(self):
+        return self._dhcp_options_id
+
+    @property
+    def instance_tenancy(self):
+        return self._instance_tenancy
+
+    @property
+    def is_default(self):
+        return self._is_default
+
+    @property
+    def state(self):
+        return self._state
+
+    @property
+    def owner_id(self):
+        return self._owner_id
+
+    @property
+    def tags(self):
+        return self._tags
+
+    @property
+    def vpc_id(self):
+        return self._vpc_id
+
+    def __del__(self):
+        # Cleanup resources if needed
+        for attr in list(self.__dict__.keys()):
+            delattr(self, attr)
+
+
+if __name__ == '__main__':
+    vpc = VPC('us-west-2', vpc_id="vpc-017f9600d16474436")
+    print(vpc.describe_vpc())
+    subnets = vpc.get_subnets()
+    for subnet in subnets:
+        print(subnet.describe_subnet())
