@@ -5,5 +5,6 @@
 
 ***
 ### Changelist
-- Created _vpc base class for AWS VPC operations
-- Created and implemented a Subnet OOP like class
+- #### 0.1.0a0
+  - Created _vpc base class for AWS VPC operations
+  - Created and implemented a Subnet Object Based class
