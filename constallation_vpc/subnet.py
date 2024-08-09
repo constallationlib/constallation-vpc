@@ -2,7 +2,8 @@ from _vpc import _vpc
 from errors import ErrorHandler
 
 class Subnet(_vpc):
-    def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None, aws_access_secret_key:str=None, aws_sts_session_token:str=None,
+    def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None,
+                 aws_access_secret_key:str=None, aws_sts_session_token:str=None,
                  vpc_id:str=None, cidr_block:str=None, availability_zone:str=None):
         self._subnet_id = subnet_id
         self._region = region
@@ -39,16 +40,27 @@ class Subnet(_vpc):
             self._ipv6_native = subnet.get('Ipv6Native')
             self._private_dns_name_options_on_launch = subnet.get('PrivateDnsNameOptionsOnLaunch')
         elif self._vpc_id is not None and self._cidr_block is not None and self._availability_zone is not None:
-            self.create_subnet(self._vpc_id, self._cidr_block, self._availability_zone)
+            x = super()._create_subnet(self.vpc_id, self.cidr_block, self.availability_zone)
+            if "Error" in x:
+                ErrorHandler.parse_and_raise(x)
+            else:
+                self._subnet_id = x["SubnetId"]
+                self._cidr_block = x["CidrBlock"]
+                self._availability_zone = x["Subnet"]["AvailabilityZone"]
+                self._initualize_subnet()
 
-    def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str) -> dict:
+    def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str):
         x = super()._create_subnet(vpc_id, cidr_block, avalibility_zone)
         if "Error" in x:
             ErrorHandler.parse_and_raise(x)
-        self._subnet_id = x["SubnetId"]
-        self._cidr_block = x["CidrBlock"]
-        self._availability_zone = x["Subnet"]["AvailabilityZone"]
-        self._initualize_subnet()
+        else:
+            return Subnet(
+                region=self._region,
+                subnet_id=x["SubnetId"],
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+                aws_sts_session_token=self._aws_sts_token,
+            )
 
 
     @property
