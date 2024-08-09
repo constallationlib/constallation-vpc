@@ -28,7 +28,115 @@ class _vpc:
         except json.JSONDecodeError:
             return {"Error": "Failed to parse JSON output"}
 
-    # Subnet Functions
+    def _describe_route_table(self, route_table_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-route-tables",
+            "--route-table-ids", route_table_id,
+            "--region", self.region_name
+        ]
+        return self._run_aws_command(cmd)
+
+    def _create_route_table(self, vpc_id: str, route_table_name: str = "constellation-route-table") -> dict:
+        cmd = [
+            "aws", "ec2", "create-route-table",
+            "--vpc-id", vpc_id,
+            "--region", self.region_name
+        ]
+
+        route_table_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in route_table_creation_result:
+            return route_table_creation_result
+
+        route_table_id = route_table_creation_result.get('RouteTable', {}).get('RouteTableId')
+        if not route_table_id:
+            return {"Error": "Route Table ID not found in creation response"}
+
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", route_table_id,
+            "--tags", f"Key=Name,Value={route_table_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"RouteTableId": route_table_id, "RouteTableName": route_table_name, "TagResult": tag_result}
+
+    def _delete_route_table(self, route_table_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-route-table",
+            "--route-table-id", route_table_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _associate_route_table(self, route_table_id: str, subnet_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "associate-route-table",
+            "--route-table-id", route_table_id,
+            "--subnet-id", subnet_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _disassociate_route_table(self, association_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "disassociate-route-table",
+            "--association-id", association_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _replace_route_table_association(self, association_id: str, route_table_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "replace-route-table-association",
+            "--association-id", association_id,
+            "--route-table-id", route_table_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _create_route(self, route_table_id: str, destination_cidr_block: str, gateway_id: str = None, nat_gateway_id: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "create-route",
+            "--route-table-id", route_table_id,
+            "--destination-cidr-block", destination_cidr_block,
+            "--region", self.region_name
+        ]
+
+        if gateway_id:
+            cmd.extend(["--gateway-id", gateway_id])
+
+        if nat_gateway_id:
+            cmd.extend(["--nat-gateway-id", nat_gateway_id])
+
+        return self._run_aws_command(cmd)
+
+    def _delete_route(self, route_table_id: str, destination_cidr_block: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-route",
+            "--route-table-id", route_table_id,
+            "--destination-cidr-block", destination_cidr_block,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_route_tables(self, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-route-tables",
+            "--filters", f"Name=vpc-id,Values={vpc_id}",
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
     def _describe_subnet(self, subnet_id: str) -> dict:
         cmd = [
             "aws", "ec2", "describe-subnets",
@@ -61,12 +169,10 @@ class _vpc:
         if "Error" in subnet_creation_result:
             return subnet_creation_result
 
-        # Extract Subnet ID from the creation result
         subnet_id = subnet_creation_result.get('Subnet', {}).get('SubnetId')
         if not subnet_id:
             return {"Error": "Subnet ID not found in creation response"}
 
-        # Add the Name tag to the subnet
         tag_result = self._run_aws_command([
             "aws", "ec2", "create-tags",
             "--resources", subnet_id,
@@ -136,12 +242,10 @@ class _vpc:
         if "Error" in vpc_creation_result:
             return vpc_creation_result
 
-        # Extract VPC ID from the creation result
         vpc_id = vpc_creation_result.get('Vpc', {}).get('VpcId')
         if not vpc_id:
             return {"Error": "VPC ID not found in creation response"}
 
-        # Describe the subnets to find the newly created subnet
         subnets = self._run_aws_command([
             "aws", "ec2", "describe-subnets",
             "--filters", f"Name=vpc-id,Values={vpc_id}",
@@ -154,7 +258,6 @@ class _vpc:
         if not subnet_id:
             return {"Error": "Subnet ID not found"}
 
-        # Add the Name tag to the subnet
         tag_result = self._run_aws_command([
             "aws", "ec2", "create-tags",
             "--resources", subnet_id,
@@ -167,7 +270,6 @@ class _vpc:
 
         return {"VpcId": vpc_id, "SubnetId": subnet_id, "SubnetName": subnet_name, "TagResult": tag_result}
 
-    # VPC Functions
     def _describe_vpc(self, vpc_id: str) -> dict:
         cmd = [
             "aws", "ec2", "describe-vpcs",
@@ -188,12 +290,10 @@ class _vpc:
         if "Error" in vpc_creation_result:
             return vpc_creation_result
 
-        # Extract VPC ID from the creation result
         vpc_id = vpc_creation_result.get('Vpc', {}).get('VpcId')
         if not vpc_id:
             return {"Error": "VPC ID not found in creation response"}
 
-        # Add the Name tag to the VPC
         tag_result = self._run_aws_command([
             "aws", "ec2", "create-tags",
             "--resources", vpc_id,
