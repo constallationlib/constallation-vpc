@@ -10,22 +10,22 @@
   - Created and implemented a Subnet Object Based class
   - Created ErrorHandler to convert AWS CLI Errors to Python Exceptions
 - #### **<span style="color:red;">0.1.0a1</span>**
-  - Added Error Handling for the following AWS CLI Errors 
-    - InvalidSubnet
+  - ##### <span style="color:#73ff98;">Added Error Handling for the following AWS CLI Errors
+    - ###### <span style="color:#73ceff;"> **InvalidSubnet**
       - ID.NotFound
       - ZoneMismatch
       - InUse
       - Association
       - DependentService
       - Attachment
-    - AccessDenied
-    - AuthFailure
-    - RequestLimitExceeded
-    - ThrottlingException
-    - ResourceNotFoundException
-    - InvalidParameterValue
-    - ServiceUnavailable
-    - InternalFailure
-    - ValidationException
-    - InvalidClientTokenId
-    - OptInRequired
+    - ###### <span style="color:#73ceff;"> AccessDenied
+    - ###### <span style="color:#73ceff;"> AuthFailure
+    - ###### <span style="color:#73ceff;"> RequestLimitExceeded
+    - ###### <span style="color:#73ceff;"> ThrottlingException
+    - ###### <span style="color:#73ceff;"> ResourceNotFoundException
+    - ###### <span style="color:#73ceff;"> InvalidParameterValue
+    - ###### <span style="color:#73ceff;"> ServiceUnavailable
+    - ###### <span style="color:#73ceff;"> InternalFailure
+    - ###### <span style="color:#73ceff;"> ValidationException
+    - ###### <span style="color:#73ceff;"> InvalidClientTokenId
+    - ###### <span style="color:#73ceff;"> OptInRequired
