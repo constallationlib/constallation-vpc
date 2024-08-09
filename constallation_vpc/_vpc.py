@@ -86,6 +86,16 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _associate_subnet_cidr_block(self, subnet_id: str, cidr_block: str) -> dict:
+        cmd = [
+            "aws", "ec2", "associate-subnet-cidr-block",
+            "--subnet-id", subnet_id,
+            "--cidr-block", cidr_block,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
     @property
     def region(self) -> str:
         if self.region_name:
