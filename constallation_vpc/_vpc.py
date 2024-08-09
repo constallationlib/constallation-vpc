@@ -96,6 +96,14 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _create_default_vpc(self) -> dict:
+        cmd = [
+            "aws", "ec2", "create-default-vpc",
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
     @property
     def region(self) -> str:
         if self.region_name:
