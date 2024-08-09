@@ -21,7 +21,7 @@ class InvalidSubnetCIDR(SubnetError):
         self.error_code = "InvalidSubnet.Conflict"
 
 
-class CLIErrorParser:
+class ErrorHandler:
     def parse_and_raise(self, error_dict):
         # Extract the error message
         error_message = error_dict.get('Error', '')
