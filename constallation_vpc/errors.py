@@ -1,4 +1,4 @@
-import re
+import re as _re
 
 
 class SubnetError(Exception):
@@ -7,10 +7,9 @@ class SubnetError(Exception):
         self.message = message
         super().__init__(message, *args)
 
-
 class InvalidSubnetCIDR(SubnetError):
     def __init__(self, operation, original_message, *args):
-        cidr_match = re.search(r"'(.*?)'", original_message)
+        cidr_match = _re.search(r"'(.*?)'", original_message)
         if cidr_match:
             cidr = cidr_match.group(1)
             formatted_message = f"The CIDR {cidr} conflicts with another subnet"
@@ -20,15 +19,14 @@ class InvalidSubnetCIDR(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
 
-
 class ErrorHandler:
     def parse_and_raise(self, error):
         # Extract the error message
         error_message = error.get('Error', '')
 
-        # Use regex to extract the error code and operation from the error message
-        code_match = re.search(r'\((.*?)\)', error_message)
-        operation_match = re.search(r'when calling the (.*?) operation', error_message)
+        # Use _regex to extract the error code and operation from the error message
+        code_match = _re.search(r'\((.*?)\)', error_message)
+        operation_match = _re.search(r'when calling the (.*?) operation', error_message)
 
         if code_match and operation_match:
             error_code = code_match.group(1)
