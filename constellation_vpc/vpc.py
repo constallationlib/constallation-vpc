@@ -20,25 +20,31 @@ class VPC(_vpc):
 
     def _initialize_vpc(self):
         if self._vpc_id is not None:
-            vpc = super()._describe_vpc(self._vpc_id)
-            if "Error" in vpc:
-                self._error_handler.parse_and_raise(vpc)
-            self._cidr_block = vpc.get('CidrBlock')
-            self._is_default = vpc.get('IsDefault')
-            self._state = vpc.get('State')
-            self._owner_id = vpc.get('OwnerId')
+            vpc_data = super()._describe_vpc(self._vpc_id)
+            if "Error" in vpc_data:
+                self._error_handler.parse_and_raise(vpc_data)
+            vpc_info = vpc_data.get('Vpcs', [])[0]  # Get the first VPC entry from the result
+
+            self._cidr_block = vpc_info.get('CidrBlock')
+            self._cidr_block_association_set = vpc_info.get('CidrBlockAssociationSet', [])
+            self._dhcp_options_id = vpc_info.get('DhcpOptionsId')
+            self._instance_tenancy = vpc_info.get('InstanceTenancy')
+            self._is_default = vpc_info.get('IsDefault')
+            self._state = vpc_info.get('State')
+            self._owner_id = vpc_info.get('OwnerId')
+            self._tags = vpc_info.get('Tags', [])
         elif self._vpc_cidr_block is not None:
-            vpc = super()._create_vpc(self._vpc_cidr_block)
-            if "Error" in vpc:
-                self._error_handler.parse_and_raise(vpc)
-            self._vpc_id = vpc.get('VpcId')
+            vpc_data = super()._create_vpc(self._vpc_cidr_block)
+            if "Error" in vpc_data:
+                self._error_handler.parse_and_raise(vpc_data)
+            self._vpc_id = vpc_data.get('Vpc', {}).get('VpcId')
             self._initialize_vpc()
 
     def create_vpc(self, cidr_block: str) -> dict:
         vpc = super()._create_vpc(cidr_block)
         if "Error" in vpc:
             self._error_handler.parse_and_raise(vpc)
-        self._vpc_id = vpc.get('VpcId')
+        self._vpc_id = vpc.get('Vpc', {}).get('VpcId')
         return vpc
 
     def delete_vpc(self, vpc_id: str = None) -> dict:
@@ -83,11 +89,11 @@ class VPC(_vpc):
         """
         Fetches all subnets associated with this VPC and returns a list of initialized Subnet objects.
         """
-        result = super()._describe_vpc(self._vpc_id)
+        result = super()._describe_subnets(self._vpc_id)
         if "Error" in result:
             self._error_handler.parse_and_raise(result)
 
-        subnets = result.get('Vpc', [])
+        subnets = result.get('Subnets', [])
         initialized_subnets = []
 
         for subnet_info in subnets:
@@ -101,37 +107,4 @@ class VPC(_vpc):
             )
             initialized_subnets.append(subnet)
 
-        return initialized_subnets
-
-    @property
-    def cidr_block(self):
-        return self._cidr_block
-
-    @property
-    def is_default(self):
-        return self._is_default
-
-    @property
-    def state(self):
-        return self._state
-
-    @property
-    def owner_id(self):
-        return self._owner_id
-
-    @property
-    def vpc_id(self):
-        return self._vpc_id
-
-    def __del__(self):
-        # Cleanup resources if needed
-        for attr in list(self.__dict__.keys()):
-            delattr(self, attr)
-
-
-if __name__ == '__main__':
-    vpc = VPC('us-west-2', vpc_id="vpc-017f9600d16474436")
-    subnets = vpc.get_subnets()
-    print(subnets)
-    for subnet in subnets:
-        print(subnet.describe_subnet())
+        return initialized_subn
