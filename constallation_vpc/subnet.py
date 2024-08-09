@@ -141,5 +141,5 @@ class Subnet(_vpc):
 
 if __name__ == '__main__':
     x = Subnet(region='us-west-2')
-    y = x.create_subnet("vpc-0558d8b24a783d976", "172.31.0.0/16", availability_zone="us-west-2d")
+    y = x.create_subnet("vpc-0558d8b24a783d976", "192.168.0.0/24", availability_zone="us-west-2d")
     print(y.subnet_id, y.vpc_id, y.availability_zone)
