@@ -1,5 +1,4 @@
-
-# <code>Subnet(<span style="color: #DA70D6;">[_vpc]("_vpc.md")</span>)</code>
+# <code>Subnet(<span style="color: #DA70D6;">_vpc</span>)</code>
 
 - The `Subnet` class was the pioneering class in the `constallation_vpc` module. It provides a unique, object-oriented interface that differentiates itself from `boto3.resources`, offering enhanced control and flexibility.
 - <span style="color: #DA70D6;">[`_vpc`]("_vpc.md")</span> is the foundational base class and the backbone of the `constallation_vpc` module. The `Subnet` class leverages `_vpc` to efficiently execute CLI requests to AWS.
