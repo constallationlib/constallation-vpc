@@ -4,4 +4,5 @@ __author__ = "Coulter Stutz"
 __email__ = "coulterstutz@gmail.com"
 __license__ = "MIT"
 from subnet import Subnet
-__all__ = ["Subnet"]
+from vpc import VPC
+__all__ = ["Subnet", "VPC"]
