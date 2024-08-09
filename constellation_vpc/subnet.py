@@ -153,9 +153,3 @@ class Subnet(_vpc):
     @property
     def private_dns_name_options_on_launch(self):
         return self._private_dns_name_options_on_launch
-
-
-if __name__ == '__main__':
-    x = Subnet(region='us-west-2')
-    y = x.create_subnet("vpc-0558d8b24a783d976", "10.0.16.0/20", availability_zone="us-west-2d")
-    print(y.subnet_id, y.vpc_id, y.availability_zone)
