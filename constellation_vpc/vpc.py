@@ -1,3 +1,5 @@
+from _vpc import _vpc
+
 class VPC(_vpc):
     def __init__(self, region: str, vpc_id: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
                  aws_session_token: str = None, vpc_cidr_block: str = None):
