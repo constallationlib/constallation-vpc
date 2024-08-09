@@ -29,40 +29,14 @@ class _vpc:
         except json.JSONDecodeError:
             return {"Error": "Failed to parse JSON output"}
 
+    # Subnet Functions
     def _describe_subnet(self, subnet_id: str) -> dict:
         cmd = [
             "aws", "ec2", "describe-subnets",
             "--subnet-ids", subnet_id,
             "--region", self.region_name
         ]
-        data = self._run_aws_command(cmd)
-
-        if "Error" in data:
-            return data
-
-        try:
-            subnet_info = data['Subnets'][0]
-            return {
-                "AvailabilityZone": subnet_info.get("AvailabilityZone"),
-                "AvailabilityZoneId": subnet_info.get("AvailabilityZoneId"),
-                "AvailableIpAddressCount": subnet_info.get("AvailableIpAddressCount"),
-                "CidrBlock": subnet_info.get("CidrBlock"),
-                "DefaultForAz": subnet_info.get("DefaultForAz"),
-                "MapPublicIpOnLaunch": subnet_info.get("MapPublicIpOnLaunch"),
-                "MapCustomerOwnedIpOnLaunch": subnet_info.get("MapCustomerOwnedIpOnLaunch"),
-                "State": subnet_info.get("State"),
-                "SubnetId": subnet_info.get("SubnetId"),
-                "VpcId": subnet_info.get("VpcId"),
-                "OwnerId": subnet_info.get("OwnerId"),
-                "AssignIpv6AddressOnCreation": subnet_info.get("AssignIpv6AddressOnCreation"),
-                "Ipv6CidrBlockAssociationSet": subnet_info.get("Ipv6CidrBlockAssociationSet"),
-                "SubnetArn": subnet_info.get("SubnetArn"),
-                "EnableDns64": subnet_info.get("EnableDns64"),
-                "Ipv6Native": subnet_info.get("Ipv6Native"),
-                "PrivateDnsNameOptionsOnLaunch": subnet_info.get("PrivateDnsNameOptionsOnLaunch")
-            }
-        except (KeyError, IndexError):
-            return {"Error": "Unexpected response structure"}
+        return self._run_aws_command(cmd)
 
     def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None, subnet_name: str = "constallation-subnet") -> dict:
         cmd = [
@@ -185,6 +159,92 @@ class _vpc:
             return tag_result
 
         return {"VpcId": vpc_id, "SubnetId": subnet_id, "SubnetName": subnet_name, "TagResult": tag_result}
+
+    # VPC Functions
+    def _describe_vpc(self, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-vpcs",
+            "--vpc-ids", vpc_id,
+            "--region", self.region_name
+        ]
+        return self._run_aws_command(cmd)
+
+    def _create_vpc(self, cidr_block: str, vpc_name: str = "constallation-vpc") -> dict:
+        cmd = [
+            "aws", "ec2", "create-vpc",
+            "--cidr-block", cidr_block,
+            "--region", self.region_name
+        ]
+
+        vpc_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in vpc_creation_result:
+            return vpc_creation_result
+
+        # Extract VPC ID from the creation result
+        vpc_id = vpc_creation_result.get('Vpc', {}).get('VpcId')
+        if not vpc_id:
+            return {"Error": "VPC ID not found in creation response"}
+
+        # Add the Name tag to the VPC
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", vpc_id,
+            "--tags", f"Key=Name,Value={vpc_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"VpcId": vpc_id, "VpcName": vpc_name, "TagResult": tag_result}
+
+    def _delete_vpc(self, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-vpc",
+            "--vpc-id", vpc_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _modify_vpc_attribute(self, vpc_id: str, attribute_name: str, attribute_value) -> dict:
+        cmd = [
+            "aws", "ec2", "modify-vpc-attribute",
+            "--vpc-id", vpc_id,
+            f"--{attribute_name}", str(attribute_value).lower(),
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _associate_vpc_cidr_block(self, vpc_id: str, cidr_block: str) -> dict:
+        cmd = [
+            "aws", "ec2", "associate-vpc-cidr-block",
+            "--vpc-id", vpc_id,
+            "--cidr-block", cidr_block,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _disassociate_vpc_cidr_block(self, association_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "disassociate-vpc-cidr-block",
+            "--association-id", association_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_vpc_cidr_reservations(self, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-vpc-cidr-block-associations",
+            "--vpc-id", vpc_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
 
     @property
     def region(self) -> str:
