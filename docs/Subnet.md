@@ -24,6 +24,10 @@ subnet = Subnet(
 - #### <span style="color: #DA70D6;">**aws_secret_access_key**</span>
   - The secret_access_key for the aws_access_key
 - #### <span style="color: #DA70D6;">**aws_sts_session_token**</span>
+  - You can configure the Subnet client to use an sts session token for temporary credentials. 
 - #### <span style="color: #DA70D6;">**vpc_id**</span>
+  - If you would like to preassign a vpc for vpc_creation you would put the id of that vpc here
 - #### <span style="color: #DA70D6;">**cidr_block**</span>
+  - If you want to create a subnet put the cidr block here
 - #### <span style="color: #DA70D6;">**availability_zone**</span>
+  -   - If you want to create a subnet put the avalibility_zone 
