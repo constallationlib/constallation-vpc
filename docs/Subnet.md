@@ -3,14 +3,16 @@
 - [_vpc]("_vpc.md") is the base class and also backbone of constallation_vpc. Subnet uses it to make CLI requests to AWS
 ### Execution Arguments
 ```python
-Subnet(
+subnet = Subnet(
     region = "us-west-2",
     subnet_id = "example_id",
     aws_access_key = "example_key",
     aws_secret_access_key = "secret_example_key",
     aws_sts_token = "example_token",
     vpc_id = "example_vpc_id",
-    cidr_block = "10.0.0.0/24,
-    availability_zone = 'us-west-2a'"
+    cidr_block = "10.0.0.0/24",
+    availability_zone = 'us-west-2a'
 )
 ```
+- #### <span style="color: #DA70D6;">**Region**</span>
+- 
