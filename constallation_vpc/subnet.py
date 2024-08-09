@@ -1,12 +1,16 @@
 from _vpc import _vpc
 
 class Subnet(_vpc):
-    def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None, aws_access_secret_key:str=None, aws_sts_session_token:str=None):
+    def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None, aws_access_secret_key:str=None, aws_sts_session_token:str=None,
+                 vpc_id:str=None, cidr_block:str=None, availability_zone:str=None):
         self._subnet_id = subnet_id
         self._region = region
         self._aws_access_key = aws_access_key
         self._aws_access_secret_key = aws_access_secret_key
         self._aws_sts_token = aws_sts_session_token
+        self._vpc_id = vpc_id
+        self._cidr_block = cidr_block
+        self._availability_zone = availability_zone
 
         super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key, aws_sts_session_token=self._aws_sts_token)
         del self._aws_sts_token, self._aws_access_key, self._aws_access_secret_key
@@ -14,7 +18,7 @@ class Subnet(_vpc):
 
     def _initualize_subnet(self):
         if self._subnet_id is not None:
-            subnet = super().describe_subnet(self._subnet_id)
+            subnet = super()._describe_subnet(self._subnet_id)
             self._availability_zone = subnet.get('AvailabilityZone')
             self._availability_zone_id = subnet.get('AvailabilityZoneId')
             self._available_ip_address_count = subnet.get('AvailableIpAddressCount')
@@ -32,6 +36,16 @@ class Subnet(_vpc):
             self._enable_dns64 = subnet.get('EnableDns64')
             self._ipv6_native = subnet.get('Ipv6Native')
             self._private_dns_name_options_on_launch = subnet.get('PrivateDnsNameOptionsOnLaunch')
+        elif self._vpc_id is not None and self._cidr_block is not None and self._availability_zone is not None:
+            self.create_subnet(self._vpc_id, self._cidr_block, self._availability_zone)
+
+    def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str) -> dict:
+        x = super()._create_subnet(vpc_id, cidr_block, avalibility_zone)
+        print(x)
+        self._subnet_id = x["SubnetId"]
+        self._cidr_block = x["CidrBlock"]
+        self._availability_zone = x["Subnet"]["AvailabilityZone"]
+        self._initualize_subnet()
 
 
     @property
@@ -96,5 +110,5 @@ class Subnet(_vpc):
 
 
 if __name__ == '__main__':
-    x = Subnet(region='us-west-2', subnet_id='subnet-0c0036e53c417c552')
-    print(x.)
+    x = Subnet(region='us-west-2')
+    x.create_subnet("vpc-0558d8b24a783d976", "172.31.0.0/16", avalibility_zone="us-west-2d")
