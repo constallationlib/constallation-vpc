@@ -101,7 +101,7 @@ class VPC(_vpc):
                 region=self._region,
                 subnet_id=subnet_info.get('SubnetId'),
                 aws_access_key=self._access_key,
-                aws_access_secret_key=self._aws_access_secret_key,
+                aws_access_secret_key=self._secret_key,
                 aws_sts_session_token=None,
                 vpc_id=self._vpc_id
             )
