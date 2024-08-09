@@ -6,9 +6,8 @@ class SubnetError(Exception):
         self.message = message
         super().__init__(message, *args)
 
-class SubnetCIDR_Conflicts(SubnetError):
+class SubnetCIDRConflicts(SubnetError):
     def __init__(self, operation, original_message, *args):
-        cidr_match = _re.search(r"'(.*?)'", original_message)
         if (cidr_match := _re.search(r"'(.*?)'", original_message)):
             cidr = cidr_match.group(1)
             formatted_message = f"The CIDR {cidr} conflicts with another subnet"
@@ -18,10 +17,9 @@ class SubnetCIDR_Conflicts(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
 
-class SubnetCIDR_InvalidRange(SubnetError):
+class SubnetRangeError(SubnetError):
     def __init__(self, operation, original_message, *args):
-        range_match = _re.search(r"'(.*?)'", original_message)
-        if range_match:
+        if (range_match := _re.search(r"'(.*?)'", original_message)):
             ip_range = range_match.group(1)
             formatted_message = f"The IP range {ip_range} is invalid or out of range"
         else:
@@ -29,6 +27,42 @@ class SubnetCIDR_InvalidRange(SubnetError):
 
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Range"
+
+class SubnetIDNotFound(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified subnet ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.ID.NotFound"
+
+class SubnetZoneMismatch(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified subnet is in the wrong availability zone."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.ZoneMismatch"
+
+class SubnetInUse(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The subnet is currently in use and cannot be modified or deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.InUse"
+
+class SubnetAssociationError(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "There was an error associating the subnet with the specified resource."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.Association"
+
+class SubnetDependentServiceError(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The subnet is being used by a dependent service and cannot be modified or deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.DependentService"
+
+class SubnetAttachmentError(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "There was an error attaching the subnet to the specified resource."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.Attachment"
 
 class ErrorHandler:
     def parse_and_raise(self, error):
@@ -48,6 +82,18 @@ class ErrorHandler:
                 raise SubnetCIDRConflicts(operation, error_message)
             elif error_code == "InvalidSubnet.Range":
                 raise SubnetRangeError(operation, error_message)
+            elif error_code == "InvalidSubnet.ID.NotFound":
+                raise SubnetIDNotFound(operation, error_message)
+            elif error_code == "InvalidSubnet.ZoneMismatch":
+                raise SubnetZoneMismatch(operation, error_message)
+            elif error_code == "InvalidSubnet.InUse":
+                raise SubnetInUse(operation, error_message)
+            elif error_code == "InvalidSubnet.Association":
+                raise SubnetAssociationError(operation, error_message)
+            elif error_code == "InvalidSubnet.DependentService":
+                raise SubnetDependentServiceError(operation, error_message)
+            elif error_code == "InvalidSubnet.Attachment":
+                raise SubnetAttachmentError(operation, error_message)
             else:
                 raise SubnetError(operation, error_message)
         else:
