@@ -10,3 +10,5 @@
   - Created and implemented a Subnet Object Based class
   - Created ErrorHandler to convert AWS CLI Errors to Python Exceptions
 - #### **<span style="color:red;">0.1.0a1</span>**
+  - Added the following AWS CLI Errors 
+    - Invalid 

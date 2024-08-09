@@ -144,7 +144,6 @@ class ErrorHandler:
             error_code = code_match.group(1)
             operation = operation_match.group(1)
 
-            # Raise the appropriate error based on the error code
             if error_code == "InvalidSubnet.Conflict":
                 raise SubnetCIDRConflicts(operation, error_message)
             elif error_code == "InvalidSubnet.Range":
