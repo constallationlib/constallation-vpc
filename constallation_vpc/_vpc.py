@@ -64,13 +64,6 @@ class _vpc:
         except (KeyError, IndexError):
             return {"Error": "Unexpected response structure"}
 
-    def _describe_subnets(self, subnets: list) -> dict:
-        subnets_description = {}
-        for subnet in subnets:
-            subnets_description[subnet["SubnetId"]] = {self._describe_subnet(subnet["SubnetId"]): subnet}
-        return subnets_description
-
-
     def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None) -> dict:
         cmd = [
             "aws", "ec2", "create-subnet",
@@ -103,13 +96,46 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
-    def _create_default_vpc(self) -> dict:
+    def _create_default_vpc(self, subnet_name: str = "constallation-subnet") -> dict:
         cmd = [
             "aws", "ec2", "create-default-vpc",
             "--region", self.region_name
         ]
+        vpc_creation_result = self._run_aws_command(cmd)
 
-        return self._run_aws_command(cmd)
+        if "Error" in vpc_creation_result:
+            return vpc_creation_result
+
+        # Extract VPC ID from the creation result
+        vpc_id = vpc_creation_result.get('Vpc', {}).get('VpcId')
+        if not vpc_id:
+            return {"Error": "VPC ID not found in creation response"}
+
+        # Describe the subnets to find the newly created subnet
+        subnets = self._run_aws_command([
+            "aws", "ec2", "describe-subnets",
+            "--filters", f"Name=vpc-id,Values={vpc_id}",
+            "--region", self.region_name
+        ])
+        if "Error" in subnets:
+            return subnets
+
+        subnet_id = subnets.get('Subnets', [])[0].get('SubnetId')
+        if not subnet_id:
+            return {"Error": "Subnet ID not found"}
+
+        # Add the Name tag to the subnet
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", subnet_id,
+            "--tags", f"Key=Name,Value={subnet_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"VpcId": vpc_id, "SubnetId": subnet_id, "SubnetName": subnet_name, "TagResult": tag_result}
 
     @property
     def region(self) -> str:
