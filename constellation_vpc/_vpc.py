@@ -1,7 +1,6 @@
 import subprocess as _subprocess
 import json
 
-
 class _vpc:
     def __init__(self, region: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
                  aws_sts_session_token: str = None):
@@ -17,8 +16,6 @@ class _vpc:
 
         if self._session_token:
             cmd.extend(["--aws-session-token", self._session_token])
-
-        print("Executing AWS command:", cmd)  # Debug: print the command being executed
 
         process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
@@ -36,6 +33,14 @@ class _vpc:
         cmd = [
             "aws", "ec2", "describe-subnets",
             "--subnet-ids", subnet_id,
+            "--region", self.region_name
+        ]
+        return self._run_aws_command(cmd)
+
+    def _describe_subnets(self, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-subnets",
+            "--filters", f"Name=vpc-id,Values={vpc_id}",
             "--region", self.region_name
         ]
         return self._run_aws_command(cmd)
