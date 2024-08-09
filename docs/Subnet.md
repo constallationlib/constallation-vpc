@@ -43,4 +43,20 @@ subnet = Subnet(
   - Specify the Availability Zone within the specified region where the subnet should be created.
 
 ## <span style="color: #00d192;">**Example Usage**</span>
-### <span style="color: #36a8ff;">**Create A VPC**</span>
+- ### <span style="color: #36a8ff;">**Create A Subnet on us-west-2a**</span>
+  - ```python
+    subnet = Subnet(
+        region = "us-west-2",
+        vpc_id = "example_vpc_id",
+        cidr_block = "10.0.0.0/24",
+        availability_zone = 'us-west-2a'
+    )
+    ```
+- ### <span style="color: #36a8ff;">**Interact With A Subnet**</span>
+  - ```python
+    subnet = Subnet(
+        region = "us-west-2",
+        subnet_id = "example_id",
+    )
+    - 
+    ```
