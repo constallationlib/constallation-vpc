@@ -18,8 +18,6 @@ class _vpc:
         if self._session_token:
             cmd.extend(["--aws-session-token", self._session_token])
 
-        print("Executing AWS command:", cmd)  # Debug: print the command being executed
-
         process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
 
