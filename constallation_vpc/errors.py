@@ -1,6 +1,5 @@
 import re as _re
 
-
 class SubnetError(Exception):
     def __init__(self, operation, message, *args):
         self.operation = operation
@@ -10,7 +9,7 @@ class SubnetError(Exception):
 class SubnetCIDRConflicts(SubnetError):
     def __init__(self, operation, original_message, *args):
         cidr_match = _re.search(r"'(.*?)'", original_message)
-        if cidr_match:
+        if (cidr_match := _re.search(r"'(.*?)'", original_message)):
             cidr = cidr_match.group(1)
             formatted_message = f"The CIDR {cidr} conflicts with another subnet"
         else:
@@ -18,6 +17,18 @@ class SubnetCIDRConflicts(SubnetError):
 
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
+
+class SubnetRangeError(SubnetError):
+    def __init__(self, operation, original_message, *args):
+        range_match = _re.search(r"'(.*?)'", original_message)
+        if range_match:
+            ip_range = range_match.group(1)
+            formatted_message = f"The IP range {ip_range} is invalid or out of range"
+        else:
+            formatted_message = "The IP range is invalid or out of range"
+
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidSubnet.Range"
 
 class ErrorHandler:
     def parse_and_raise(self, error):
@@ -35,6 +46,8 @@ class ErrorHandler:
             # Raise the appropriate error based on the error code
             if error_code == "InvalidSubnet.Conflict":
                 raise SubnetCIDRConflicts(operation, error_message)
+            elif error_code == "InvalidSubnet.Range":
+                raise SubnetRangeError(operation, error_message)
             else:
                 raise SubnetError(operation, error_message)
         else:
