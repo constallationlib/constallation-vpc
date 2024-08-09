@@ -33,7 +33,7 @@ class VPC(_vpc):
             self._initialize_vpc()
 
     def describe_vpc(self, vpc_id: str = None) -> dict:
-        if vpc_id:
+        if vpc_id is not None:
             return super()._describe_vpc(vpc_id)
         return super()._describe_vpc(self._vpc_id)
 
