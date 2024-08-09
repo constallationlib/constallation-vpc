@@ -64,6 +64,73 @@ class SubnetAttachmentError(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Attachment"
 
+# General AWS Errors
+class AccessDeniedError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "Access denied. You do not have the necessary permissions for this operation."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "AccessDenied"
+
+class AuthFailureError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "Authentication failed. Please check your AWS credentials."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "AuthFailure"
+
+class RequestLimitExceededError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "Request limit exceeded. Please wait and try again later."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "RequestLimitExceeded"
+
+class ThrottlingExceptionError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "Request was throttled. Please wait and try again later."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "ThrottlingException"
+
+class ResourceNotFoundExceptionError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "The specified resource could not be found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "ResourceNotFoundException"
+
+class InvalidParameterValueError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "One or more parameters are invalid. Please check the input values."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidParameterValue"
+
+class ServiceUnavailableError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "The service is currently unavailable. Please try again later."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "ServiceUnavailable"
+
+class InternalFailureError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "An internal error occurred. Please try again later."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InternalFailure"
+
+class ValidationExceptionError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "The input provided does not meet the required constraints."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "ValidationException"
+
+class InvalidClientTokenIdError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "The security token included in the request is invalid."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidClientTokenId"
+
+class OptInRequiredError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "You must opt in to use this service."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "OptInRequired"
+
 class ErrorHandler:
     def parse_and_raise(self, error):
         # Extract the error message
@@ -94,6 +161,28 @@ class ErrorHandler:
                 raise SubnetDependentServiceError(operation, error_message)
             elif error_code == "InvalidSubnet.Attachment":
                 raise SubnetAttachmentError(operation, error_message)
+            elif error_code == "AccessDenied":
+                raise AccessDeniedError(operation, error_message)
+            elif error_code == "AuthFailure":
+                raise AuthFailureError(operation, error_message)
+            elif error_code == "RequestLimitExceeded":
+                raise RequestLimitExceededError(operation, error_message)
+            elif error_code == "ThrottlingException":
+                raise ThrottlingExceptionError(operation, error_message)
+            elif error_code == "ResourceNotFoundException":
+                raise ResourceNotFoundExceptionError(operation, error_message)
+            elif error_code == "InvalidParameterValue":
+                raise InvalidParameterValueError(operation, error_message)
+            elif error_code == "ServiceUnavailable":
+                raise ServiceUnavailableError(operation, error_message)
+            elif error_code == "InternalFailure":
+                raise InternalFailureError(operation, error_message)
+            elif error_code == "ValidationException":
+                raise ValidationExceptionError(operation, error_message)
+            elif error_code == "InvalidClientTokenId":
+                raise InvalidClientTokenIdError(operation, error_message)
+            elif error_code == "OptInRequired":
+                raise OptInRequiredError(operation, error_message)
             else:
                 raise SubnetError(operation, error_message)
         else:
