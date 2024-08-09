@@ -10,7 +10,6 @@ class SubnetError(Exception):
 
 class InvalidSubnetCIDR(SubnetError):
     def __init__(self, operation, original_message, *args):
-        # Extract the CIDR from the original message
         cidr_match = re.search(r"'(.*?)'", original_message)
         if cidr_match:
             cidr = cidr_match.group(1)
