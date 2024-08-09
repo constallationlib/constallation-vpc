@@ -1,33 +1,4 @@
 # Errors
-| **Table of Contents**                                      | **Description**                            |
-|------------------------------------------------------------|--------------------------------------------|
-| [SubnetError](#subneterror)                                | Base class for all Subnet-related errors   |
-| &nbsp;&nbsp;&nbsp;[SubnetCIDRConflicts](#subnetcidrconflicts)    | Raised when a subnet CIDR conflicts        |
-| &nbsp;&nbsp;&nbsp;[SubnetRangeError](#subnetrangeerror)    | Raised when a subnet IP range is invalid   |
-| &nbsp;&nbsp;&nbsp;[SubnetIDNotFound](#subnetidnotfound)    | Raised when a subnet ID is not found       |
-| &nbsp;&nbsp;&nbsp;[SubnetZoneMismatch](#subnetzonemismatch)   | Raised when a subnet is in the wrong zone  |
-| &nbsp;&nbsp;&nbsp;[SubnetInUse](#subnetinuse)              | Raised when a subnet is in use             |
-| &nbsp;&nbsp;&nbsp;[SubnetAssociationError](#subnetassociationerror) | Raised when a subnet association fails  |
-| &nbsp;&nbsp;&nbsp;[SubnetDependentServiceError](#subnetdependentserviceerror) | Raised when a subnet is used by a dependent service |
-| &nbsp;&nbsp;&nbsp;[SubnetAttachmentError](#subnetattachmenterror) | Raised when a subnet attachment fails   |
-| [VPCError](#vpcerror)                                      | Base class for all VPC-related errors      |
-| &nbsp;&nbsp;&nbsp;[VPCCIDRConflicts](#vpccidrconflicts)    | Raised when a VPC CIDR conflicts           |
-| &nbsp;&nbsp;&nbsp;[VPCIDNotFound](#vpcidnotfound)          | Raised when a VPC ID is not found          |
-| &nbsp;&nbsp;&nbsp;[VPCInUse](#vpcinuse)                    | Raised when a VPC is in use                |
-| &nbsp;&nbsp;&nbsp;[VPCDependentServiceError](#vpcdependentserviceerror) | Raised when a VPC is used by a dependent service |
-| &nbsp;&nbsp;&nbsp;[VPCAttachmentError](#vpcattachmenterror) | Raised when a VPC attachment fails         |
-| [General AWS Errors](#general-aws-errors)                  | General AWS errors                         |
-| &nbsp;&nbsp;&nbsp;[AccessDeniedError](#accessdeniederror)  | Raised when access is denied               |
-| &nbsp;&nbsp;&nbsp;[AuthFailureError](#authfailureerror)    | Raised when authentication fails           |
-| &nbsp;&nbsp;&nbsp;[RequestLimitExceededError](#requestlimitexceedederror) | Raised when request limit is exceeded  |
-| &nbsp;&nbsp;&nbsp;[ThrottlingExceptionError](#throttlingexceptionerror) | Raised when a request is throttled      |
-| &nbsp;&nbsp;&nbsp;[ResourceNotFoundExceptionError](#resourcenotfoundexceptionerror) | Raised when a resource is not found |
-| &nbsp;&nbsp;&nbsp;[InvalidParameterValueError](#invalidparametervalueerror) | Raised when a parameter is invalid     |
-| &nbsp;&nbsp;&nbsp;[ServiceUnavailableError](#serviceunavailableerror) | Raised when the service is unavailable |
-| &nbsp;&nbsp;&nbsp;[InternalFailureError](#internalfailureerror) | Raised when an internal failure occurs  |
-| &nbsp;&nbsp;&nbsp;[ValidationExceptionError](#validationexceptionerror) | Raised when input fails validation     |
-| &nbsp;&nbsp;&nbsp;[InvalidClientTokenIdError](#invalidclienttokeniderror) | Raised when a token is invalid         |
-| &nbsp;&nbsp;&nbsp;[OptInRequiredError](#optinrequirederror) | Raised when opt-in is required            |
 
 
 ## <span style="color: purple;">SubnetError</span>
