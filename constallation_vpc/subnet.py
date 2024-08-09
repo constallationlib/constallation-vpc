@@ -62,6 +62,9 @@ class Subnet(_vpc):
                 aws_sts_session_token=self._aws_sts_token,
             )
 
+    def delete_subnet(self, subnet_id: str) -> dict:
+        return super()._delete_subnet(subnet_id)
+
 
     @property
     def availability_zone(self):
