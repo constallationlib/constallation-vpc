@@ -2,9 +2,9 @@ from _vpc import _vpc
 from errors import ErrorHandler
 
 class Subnet(_vpc):
-    def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None,
-                 aws_access_secret_key:str=None, aws_sts_session_token:str=None,
-                 vpc_id:str=None, cidr_block:str=None, availability_zone:str=None):
+    def __init__(self, region: str, subnet_id: str = None, aws_access_key: str = None,
+                 aws_access_secret_key: str = None, aws_sts_session_token: str = None,
+                 vpc_id: str = None, cidr_block: str = None, availability_zone: str = None):
         self._subnet_id = subnet_id
         self._region = region
         self._aws_access_key = aws_access_key
@@ -49,7 +49,7 @@ class Subnet(_vpc):
                 self._availability_zone = x["Subnet"]["AvailabilityZone"]
                 self._initialize_subnet()
 
-    def create_subnet(self, vpc_id:str, cidr_block:str, availability_zone:str):
+    def create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str):
         x = super()._create_subnet(vpc_id, cidr_block, availability_zone)
         if "Error" in x:
             self._error_handler.parse_and_raise(x)
@@ -69,6 +69,24 @@ class Subnet(_vpc):
             result = super()._delete_subnet(self._subnet_id)
             self.__del__()
             return result
+
+    def disassociate_cidr_block(self, association_id: str) -> dict:
+        result = super()._disassociate_subnet_cidr_block(association_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+        return result
+
+    def get_cidr_reservations(self) -> dict:
+        result = super()._get_subnet_cidr_reservations(self._subnet_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+        return result
+
+    def modify_subnet_attribute(self, attribute_name: str, attribute_value) -> dict:
+        result = super()._modify_subnet_attribute(self._subnet_id, attribute_name, attribute_value)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+        return result
 
     def __del__(self):
         # This function is invoked when the instance is about to be destroyed.
