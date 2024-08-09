@@ -67,8 +67,16 @@ class Subnet(_vpc):
             return super()._delete_subnet(subnet_id)
         else:
             # Delete This Subnet Instance (self)
-            #                               ^ what i meant by self is the class. Delete the whole Subnet Self class
-            return super()._delete_subnet(self._subnet_id)
+            result = super()._delete_subnet(self._subnet_id)
+            # Delete the instance by removing all attributes
+            self.__del__()
+            return result
+
+    def __del__(self):
+        # This function is invoked when the instance is about to be destroyed.
+        # It helps in cleaning up any resources if necessary.
+        for attr in list(self.__dict__.keys()):
+            delattr(self, attr)
 
     @property
     def availability_zone(self):
