@@ -22,6 +22,7 @@ class VPC(_vpc):
         if self._vpc_id is not None:
             vpc_data = super()._describe_vpc(self._vpc_id)
             if "Error" in vpc_data:
+                print(vpc_data["Error"])
                 self._error_handler.parse_and_raise(vpc_data)
             vpc_info = vpc_data.get('Vpcs', [])[0]  # Get the first VPC entry from the result
 
