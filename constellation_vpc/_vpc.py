@@ -8,11 +8,15 @@ class _vpc:
         self._secret_key = aws_access_secret_key
 
     def _run_aws_command(self, cmd: list) -> dict:
+        # Set environment variables for AWS credentials if provided
+        env = None
         if self._access_key and self._secret_key:
-            cmd.extend(["--aws-access-key-id", self._access_key])
-            cmd.extend(["--aws-secret-access-key", self._secret_key])
+            env = {
+                "AWS_ACCESS_KEY_ID": self._access_key,
+                "AWS_SECRET_ACCESS_KEY": self._secret_key
+            }
 
-        process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True)
+        process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
         stdout, stderr = process.communicate()
 
         if process.returncode != 0:
@@ -148,7 +152,7 @@ class _vpc:
         ]
         return self._run_aws_command(cmd)
 
-    def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None, subnet_name: str = "constallation-subnet") -> dict:
+    def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None, subnet_name: str = "constellation-subnet") -> dict:
         cmd = [
             "aws", "ec2", "create-subnet",
             "--vpc-id", vpc_id,
@@ -227,7 +231,7 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
-    def _create_default_vpc(self, subnet_name: str = "constallation-subnet") -> dict:
+    def _create_default_vpc(self, subnet_name: str = "constellation-subnet") -> dict:
         cmd = [
             "aws", "ec2", "create-default-vpc",
             "--region", self.region_name
@@ -273,7 +277,7 @@ class _vpc:
         ]
         return self._run_aws_command(cmd)
 
-    def _create_vpc(self, cidr_block: str, vpc_name: str = "constallation-vpc") -> dict:
+    def _create_vpc(self, cidr_block: str, vpc_name: str = "constellation-vpc") -> dict:
         cmd = [
             "aws", "ec2", "create-vpc",
             "--cidr-block", cidr_block,
