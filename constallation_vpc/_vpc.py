@@ -64,7 +64,7 @@ class _vpc:
         except (KeyError, IndexError):
             return {"Error": "Unexpected response structure"}
 
-    def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None) -> dict:
+    def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None, subnet_name: str = "constallation-subnet") -> dict:
         cmd = [
             "aws", "ec2", "create-subnet",
             "--vpc-id", vpc_id,
@@ -75,7 +75,28 @@ class _vpc:
         if availability_zone:
             cmd.extend(["--availability-zone", availability_zone])
 
-        return self._run_aws_command(cmd)
+        subnet_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in subnet_creation_result:
+            return subnet_creation_result
+
+        # Extract Subnet ID from the creation result
+        subnet_id = subnet_creation_result.get('Subnet', {}).get('SubnetId')
+        if not subnet_id:
+            return {"Error": "Subnet ID not found in creation response"}
+
+        # Add the Name tag to the subnet
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", subnet_id,
+            "--tags", f"Key=Name,Value={subnet_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"SubnetId": subnet_id, "SubnetName": subnet_name, "TagResult": tag_result}
 
     def _delete_subnet(self, subnet_id: str) -> dict:
         cmd = [
@@ -91,6 +112,24 @@ class _vpc:
             "aws", "ec2", "associate-subnet-cidr-block",
             "--subnet-id", subnet_id,
             "--cidr-block", cidr_block,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _disassociate_subnet_cidr_block(self, association_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "disassociate-subnet-cidr-block",
+            "--association-id", association_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _get_subnet_cidr_reservations(self, subnet_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "get-subnet-cidr-reservations",
+            "--subnet-id", subnet_id,
             "--region", self.region_name
         ]
 
