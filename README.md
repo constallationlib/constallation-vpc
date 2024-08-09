@@ -7,3 +7,5 @@
 ### Changelist
 - #### **<span style="color:red;">0.1.1a0</span>**
   - Added VPC Class
+- #### **<span style="color:red;">0.1.1a1</span>**
+  - Added function in vpc class to generate `constallation_vpc.Subnet` subnets for all associated subnets
