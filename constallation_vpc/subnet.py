@@ -62,8 +62,12 @@ class Subnet(_vpc):
                 aws_sts_session_token=self._aws_sts_token,
             )
 
-    def delete_subnet(self, subnet_id: str) -> dict:
-        return super()._delete_subnet(subnet_id)
+    def delete_subnet(self, subnet_id: str = None) -> dict:
+        if subnet_id is not None:
+            return super()._delete_subnet(subnet_id)
+        else:
+            # Delete This Subnet Class (self)
+            return super().delete_subnet(self._subnet_id)
 
 
     @property
