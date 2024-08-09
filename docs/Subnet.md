@@ -1,7 +1,11 @@
+
 # <code>Subnet(<span style="color: #DA70D6;">[_vpc]("_vpc.md")</span>)</code>
-- The subnet class was the first class developed in constallation_vpc. It serves to provide an object based interface unique from boto3.resources.
-- [_vpc]("_vpc.md") is the base class and also backbone of constallation_vpc. Subnet uses it to make CLI requests to AWS
+
+- The `Subnet` class was the pioneering class in the `constallation_vpc` module. It provides a unique, object-oriented interface that differentiates itself from `boto3.resources`, offering enhanced control and flexibility.
+- <span style="color: #DA70D6;">[`_vpc`]("_vpc.md")</span> is the foundational base class and the backbone of the `constallation_vpc` module. The `Subnet` class leverages `_vpc` to efficiently execute CLI requests to AWS.
+
 ### Execution Arguments
+
 ```python
 subnet = Subnet(
     region = "us-west-2",
@@ -14,20 +18,27 @@ subnet = Subnet(
     availability_zone = 'us-west-2a'
 )
 ```
+
 - #### <span style="color: #DA70D6;">**Region**</span>
-  - The region you would like to query to
+  - Specify the AWS region where you want to perform the query.
+  
 - #### <span style="color: #DA70D6;">**subnet_id**</span>
-  - If you would like to associate the class with a pre-existing subnet it will automatically set itself up. 
-  - ID must start with subnet
+  - If you have a pre-existing subnet, providing its ID (which must start with `subnet`) will allow the class to automatically configure itself to interface with that subnet.
+  
 - #### <span style="color: #DA70D6;">**aws_access_key**</span>
-  - if you would like to use an access_key to authenticate with aws you would put your access key in here
+  - Enter your AWS `access_key` here to authenticate requests. This is crucial for secure communication with AWS services.
+  
 - #### <span style="color: #DA70D6;">**aws_secret_access_key**</span>
-  - The secret_access_key for the aws_access_key
+  - The `secret_access_key` corresponding to your AWS `access_key` is required here to ensure secure access to AWS resources.
+  
 - #### <span style="color: #DA70D6;">**aws_sts_session_token**</span>
-  - You can configure the Subnet client to use an sts session token for temporary credentials. 
+  - This optional argument allows you to configure the `Subnet` client to use an AWS STS session token for temporary security credentials, adding an extra layer of security when necessary.
+  
 - #### <span style="color: #DA70D6;">**vpc_id**</span>
-  - If you would like to preassign a vpc for vpc_creation you would put the id of that vpc here
+  - Preassign a specific VPC by providing its ID here. This is particularly useful for VPC-related operations where you want to work within a designated VPC environment.
+  
 - #### <span style="color: #DA70D6;">**cidr_block**</span>
-  - If you want to create a subnet put the cidr block here
+  - Provide the CIDR block to create a subnet within your specified VPC.
+  
 - #### <span style="color: #DA70D6;">**availability_zone**</span>
-  -   - If you want to create a subnet put the avalibility_zone 
+  - Specify the Availability Zone within the specified region where the subnet should be created.
