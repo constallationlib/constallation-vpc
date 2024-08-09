@@ -1,5 +1,5 @@
 
-# `<code>VPC(<span style="color: #DA70D6;">_vpc</span>)</code>`
+# <code>VPC(<span style="color: #DA70D6;">_vpc</span>)</code>
 
 - The `VPC` class is an integral part of the `constallation_vpc` module, designed to provide a powerful, object-oriented interface for managing Virtual Private Clouds (VPCs) in AWS. It enhances the capabilities of `boto3.resources`, giving you more granular control and flexibility over VPC operations.
 - <span style="color: #DA70D6;">[`_vpc`]("_vpc")</span> is the foundational base class that the `VPC` class extends to interact seamlessly with AWS CLI, allowing efficient execution of VPC-related operations.
