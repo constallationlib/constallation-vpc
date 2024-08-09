@@ -52,11 +52,15 @@ subnet = Subnet(
         availability_zone = 'us-west-2a'
     )
     ```
-- ### <span style="color: #36a8ff;">**Interact With A Subnet**</span>
-  - ```python
-    subnet = Subnet(
-        region = "us-west-2",
-        subnet_id = "example_id",
-    )
-    - 
-    ```
+  - ### <span style="color: #36a8ff;">**Interact With A Subnet**</span>
+    - ```python
+      subnet = Subnet(
+          region = "us-west-2",
+          subnet_id = "example_id",
+      )
+      ```
+      - initualizes a Subnet client around your subnet_id on us_west_2
+    - ```python
+        print(subnet.vpc_id)
+      ```
+      - Gets your subnet's vpc_id and prints it out.
