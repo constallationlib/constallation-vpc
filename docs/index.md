@@ -1,4 +1,4 @@
-- ### [_vpc]("/_vpc")
-- ### [Subnet]("/Subnet")
-- ### [VPC]("/VPC")
-- ### [Errors]("Errors/")
+- ### [_vpc]("./_vpc.md")
+- ### [Subnet]("./Subnet.md")
+- ### [VPC]("./VPC.md")
+- ### [Errors]("./Errors.md")
