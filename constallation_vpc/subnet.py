@@ -1,5 +1,5 @@
 from _vpc import _vpc
-from errors import ErrorHandler, ConflictingCIDRError
+from errors import ErrorHandler
 
 class Subnet(_vpc):
     def __init__(self, region:str, subnet_id:str=None, aws_access_key:str=None,
