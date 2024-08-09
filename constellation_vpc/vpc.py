@@ -22,7 +22,6 @@ class VPC(_vpc):
             self._cidr_block = vpc.get('CidrBlock')
             self._is_default = vpc.get('IsDefault')
             self._state = vpc.get('State')
-            self._vpc_id = vpc.get('VpcId')
             self._owner_id = vpc.get('OwnerId')
         elif self._vpc_cidr_block is not None:
             vpc = super()._create_vpc(self._vpc_cidr_block)
