@@ -7,7 +7,7 @@ class SubnetError(Exception):
         self.message = message
         super().__init__(message, *args)
 
-class InvalidSubnetCIDR(SubnetError):
+class SubnetCIDRConflicts(SubnetError):
     def __init__(self, operation, original_message, *args):
         cidr_match = _re.search(r"'(.*?)'", original_message)
         if cidr_match:
