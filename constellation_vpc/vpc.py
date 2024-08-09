@@ -1,3 +1,4 @@
+from subnet import Subnet
 from _vpc import _vpc
 from errors import ErrorHandler
 
@@ -78,6 +79,30 @@ class VPC(_vpc):
             self._error_handler.parse_and_raise(result)
         return result
 
+    def get_subnets(self):
+        """
+        Fetches all subnets associated with this VPC and returns a list of initialized Subnet objects.
+        """
+        result = super()._describe_subnets(self._vpc_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+
+        subnets = result.get('Subnets', [])
+        initialized_subnets = []
+
+        for subnet_info in subnets:
+            subnet = Subnet(
+                region=self._region,
+                subnet_id=subnet_info.get('SubnetId'),
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+                aws_sts_session_token=None,
+                vpc_id=self._vpc_id
+            )
+            initialized_subnets.append(subnet)
+
+        return initialized_subnets
+
     @property
     def cidr_block(self):
         return self._cidr_block
@@ -107,3 +132,6 @@ class VPC(_vpc):
 if __name__ == '__main__':
     vpc = VPC('us-west-2', vpc_id="vpc-017f9600d16474436")
     print(vpc.describe_vpc())
+    subnets = vpc.get_subnets()
+    for subnet in subnets:
+        print(subnet.describe_subnet())
