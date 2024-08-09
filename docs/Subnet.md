@@ -4,7 +4,7 @@
 - The `Subnet` class was the pioneering class in the `constallation_vpc` module. It provides a unique, object-oriented interface that differentiates itself from `boto3.resources`, offering enhanced control and flexibility.
 - <span style="color: #DA70D6;">[`_vpc`]("_vpc.md")</span> is the foundational base class and the backbone of the `constallation_vpc` module. The `Subnet` class leverages `_vpc` to efficiently execute CLI requests to AWS.
 
-### Execution Arguments
+- ### <span style="color: #DA70D6;">**Region**</span>
 
 ```python
 subnet = Subnet(
@@ -42,3 +42,5 @@ subnet = Subnet(
   
 - #### <span style="color: #DA70D6;">**availability_zone**</span>
   - Specify the Availability Zone within the specified region where the subnet should be created.
+
+### Example Usage
