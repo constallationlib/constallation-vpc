@@ -58,3 +58,12 @@ vpc = VPC(
     print(vpc.describe_vpc())
     ```
   - Retrieves details about the specified VPC and prints them out.
+
+- ### <span style="color: #36a8ff;">**Get All Subnets Associated With The VPC**</span>
+  - ```python
+    subnets = vpc.get_subnets()
+    for subnet in subnets:
+        print(subnet.subnet_id())
+    ```
+  - Retrieves all subnets associated with the VPC and prints out their details.
+****
