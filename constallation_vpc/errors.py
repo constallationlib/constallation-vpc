@@ -42,9 +42,3 @@ class CLIErrorParser:
                 raise SubnetError(operation, error_message)
         else:
             raise SubnetError("UnknownOperation", error_message)
-
-
-parser = CLIErrorParser()
-error_dict = {
-    'Error': "\nAn error occurred (InvalidSubnet.Conflict) when calling the CreateSubnet operation: The CIDR '172.31.0.0/16' conflicts with another subnet\n"}
-parser.parse_and_raise(error_dict)
