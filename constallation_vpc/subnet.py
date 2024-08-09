@@ -66,9 +66,7 @@ class Subnet(_vpc):
         if subnet_id is not None:
             return super()._delete_subnet(subnet_id)
         else:
-            # Delete This Subnet Instance (self)
             result = super()._delete_subnet(self._subnet_id)
-            # Delete the instance by removing all attributes
             self.__del__()
             return result
 
