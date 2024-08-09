@@ -83,11 +83,11 @@ class VPC(_vpc):
         """
         Fetches all subnets associated with this VPC and returns a list of initialized Subnet objects.
         """
-        result = super()._describe_subnets(self._vpc_id)
+        result = super()._describe_vpc(self._vpc_id)
         if "Error" in result:
             self._error_handler.parse_and_raise(result)
 
-        subnets = result.get('Subnets', [])
+        subnets = result.get('Vpc', [])
         initialized_subnets = []
 
         for subnet_info in subnets:
@@ -131,7 +131,7 @@ class VPC(_vpc):
 
 if __name__ == '__main__':
     vpc = VPC('us-west-2', vpc_id="vpc-017f9600d16474436")
-    print(vpc.describe_vpc())
     subnets = vpc.get_subnets()
+    print(subnets)
     for subnet in subnets:
         print(subnet.describe_subnet())
