@@ -67,6 +67,7 @@ class Subnet(_vpc):
             return super()._delete_subnet(subnet_id)
         else:
             # Delete This Subnet Instance (self)
+            #                               ^ what i meant by self is the class. Delete the whole Subnet Self class
             return super()._delete_subnet(self._subnet_id)
 
     @property
