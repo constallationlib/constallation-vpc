@@ -85,7 +85,7 @@ class VPC(_vpc):
             self._error_handler.parse_and_raise(result)
         return result
 
-    def get_subnets(self):
+    def _get_subnets(self):
         """
         Fetches all subnets associated with this VPC and returns a list of initialized Subnet objects.
         """
@@ -94,7 +94,7 @@ class VPC(_vpc):
             self._error_handler.parse_and_raise(result)
 
         subnets = result.get('Subnets', [])
-        initialized_subnets = []
+        self._subnets = []
 
         for subnet_info in subnets:
             subnet = Subnet(
@@ -105,9 +105,9 @@ class VPC(_vpc):
                 aws_sts_session_token=None,
                 vpc_id=self._vpc_id
             )
-            initialized_subnets.append(subnet)
+            self._subnets.append(subnet)
 
-        return initialized_subnets
+        return self._subnets
 
     @property
     def cidr_block(self):
