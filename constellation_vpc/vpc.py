@@ -157,5 +157,4 @@ class VPC(_vpc):
 
 if __name__ == '__main__':
     vpc = VPC('us-west-2', vpc_id="vpc-017f9600d16474436")
-    print(vpc.describe_vpc())
     subnets = vpc.subnets
