@@ -44,7 +44,7 @@ class Subnet(_vpc):
     def create_subnet(self, vpc_id:str, cidr_block:str, avalibility_zone:str) -> dict:
         x = super()._create_subnet(vpc_id, cidr_block, avalibility_zone)
         if "Error" in x:
-            ErrorHandler.parse_and_raise(x, )
+            ErrorHandler.parse_and_raise(x)
         self._subnet_id = x["SubnetId"]
         self._cidr_block = x["CidrBlock"]
         self._availability_zone = x["Subnet"]["AvailabilityZone"]
