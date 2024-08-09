@@ -15,10 +15,15 @@ subnet = Subnet(
 )
 ```
 - #### <span style="color: #DA70D6;">**Region**</span>
-  - The region you would like to query
+  - The region you would like to query to
 - #### <span style="color: #DA70D6;">**subnet_id**</span>
-  - 
+  - If you would like to associate the class with a pre-existing subnet it will automatically set itself up. 
+  - ID must start with subnet
 - #### <span style="color: #DA70D6;">**aws_access_key**</span>
+  - if you would like to use an access_key to authenticate with aws you would put your access key in here
 - #### <span style="color: #DA70D6;">**aws_secret_access_key**</span>
-- #### <span style="color: #DA70D6;">**aws_access**</span>
-- 
+  - The secret_access_key for the aws_access_key
+- #### <span style="color: #DA70D6;">**aws_sts_session_token**</span>
+- #### <span style="color: #DA70D6;">**vpc_id**</span>
+- #### <span style="color: #DA70D6;">**cidr_block**</span>
+- #### <span style="color: #DA70D6;">**availability_zone**</span>
