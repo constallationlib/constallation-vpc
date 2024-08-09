@@ -97,3 +97,4 @@ class Subnet(_vpc):
 
 if __name__ == '__main__':
     x = Subnet(region='us-west-2', subnet_id='subnet-0c0036e53c417c552')
+    print(x.)

@@ -1,20 +1,16 @@
 import subprocess as _subprocess
 import json
 
+
 class _vpc:
-    def __init__(self, region: str = None, aws_access_key: str = None, aws_access_secret_key: str = None, aws_sts_session_token: str = None):
+    def __init__(self, region: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
+                 aws_sts_session_token: str = None):
         self.region_name = region
         self._access_key = aws_access_key
         self._secret_key = aws_access_secret_key
         self._session_token = aws_sts_session_token
 
-    def describe_subnet(self, subnet_id: str) -> dict:
-        cmd = [
-            "aws", "ec2", "describe-subnets",
-            "--subnet-ids", subnet_id,
-            "--region", self.region_name
-        ]
-
+    def _run_aws_command(self, cmd: list) -> dict:
         if self._access_key and self._secret_key:
             cmd.extend(["--aws-access-key-id", self._access_key])
             cmd.extend(["--aws-secret-access-key", self._secret_key])
@@ -29,9 +25,22 @@ class _vpc:
             return {"Error": stderr}
 
         try:
-            # Load the output as JSON
-            data = json.loads(stdout)
-            # Assuming there's always at least one subnet returned
+            return json.loads(stdout)
+        except json.JSONDecodeError:
+            return {"Error": "Failed to parse JSON output"}
+
+    def _describe_subnet(self, subnet_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-subnets",
+            "--subnet-ids", subnet_id,
+            "--region", self.region_name
+        ]
+        data = self._run_aws_command(cmd)
+
+        if "Error" in data:
+            return data
+
+        try:
             subnet_info = data['Subnets'][0]
             return {
                 "AvailabilityZone": subnet_info.get("AvailabilityZone"),
@@ -52,6 +61,32 @@ class _vpc:
                 "Ipv6Native": subnet_info.get("Ipv6Native"),
                 "PrivateDnsNameOptionsOnLaunch": subnet_info.get("PrivateDnsNameOptionsOnLaunch")
             }
-        except json.JSONDecodeError:
-            return {"Error": "Failed to parse JSON output"}
+        except (KeyError, IndexError):
+            return {"Error": "Unexpected response structure"}
 
+    def _create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "create-subnet",
+            "--vpc-id", vpc_id,
+            "--cidr-block", cidr_block,
+            "--region", self.region_name
+        ]
+
+        if availability_zone:
+            cmd.extend(["--availability-zone", availability_zone])
+
+        return self._run_aws_command(cmd)
+
+    def _delete_subnet(self, subnet_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-subnet",
+            "--subnet-id", subnet_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    @property
+    def region(self) -> str:
+        if self.region_name:
+            return self.region_name
