@@ -156,4 +156,4 @@ if __name__ == '__main__':
     print(vpc.describe_vpc())
     subnets = vpc.get_subnets()
     for subnet in subnets:
-        print(subnet.describe_subnet())
+        print(subnet.availability_zone())
