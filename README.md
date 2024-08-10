@@ -31,7 +31,6 @@
   - Handle The Following AWS CLI Error Codes
     - InvalidParameterValue
     - RequestLimitExceeded
-- #### **<span style="color:red;">0.2.0a8 (Planned)</span>**
   - Update Docs for VPCs
   - Update Docs For RoutingTable
   - Update Docs For Subnet
