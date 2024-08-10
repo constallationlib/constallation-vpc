@@ -20,11 +20,19 @@
     - InvalidRoute.NotFound
     - RouteAlreadyExists
 - #### **<span style="color:red;">0.2.0a5 (Planned)</span>**
-  - DependencyViolation
-  - InvalidRouteTableAssociationID.NotFound
+  - Handle The Following AWS CLI Error Codes
+      - DependencyViolation
+      - InvalidRouteTableAssociationID.NotFound
 - #### **<span style="color:red;">0.2.0a6 (Planned)</span>**
-  - InvalidRouteTableID.Malformed
-  - UnauthorizedOperation
+  - Handle The Following AWS CLI Error Codes
+    - InvalidRouteTableID.Malformed
+    - UnauthorizedOperation
 - #### **<span style="color:red;">0.2.0a7 (Planned)</span>**
-  - InvalidParameterValue
-  - RequestLimitExceeded
+  - Handle The Following AWS CLI Error Codes
+    - InvalidParameterValue
+    - RequestLimitExceeded
+- #### **<span style="color:red;">0.2.0a8 (Planned)</span>**
+  - Update Docs for VPCs
+  - Update Docs For RoutingTable
+  - Update Docs For Subnet
+  - Update Errors Docs
