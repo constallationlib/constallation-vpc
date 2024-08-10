@@ -10,7 +10,7 @@
     - Potentially unstable and untested!
 - #### **<span style="color:red;">0.2.0a1</span>**
   - Update Docs, integration preperation
-- #### **<span style="color:red;">0.2.0a2</span>**
+- #### **<span style="color:red;">0.2.0a2 (Planned)</span>**
   - Integrate Into VPCs
 - #### **<span style="color:red;">0.2.0a3 (Planned)</span>**
   - Integrate Into Subnets
