@@ -1,6 +1,7 @@
 from .subnet import Subnet
 from ._vpc import _vpc
 from .errors import ErrorHandler
+from .routing_table import RoutingTable
 
 class VPC(_vpc):
     def __init__(self, region: str, vpc_id: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
@@ -108,6 +109,28 @@ class VPC(_vpc):
 
         return self._subnets
 
+    def _get_routing_tables(self):
+        """
+        Fetches all routing tables associated with this VPC and returns a list of initialized RoutingTable objects.
+        """
+        result = super()._describe_route_tables(self._vpc_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+
+        routing_tables = result.get('RouteTables', [])
+        self._routing_tables = []
+        for rt_info in routing_tables:
+            routing_table = RoutingTable(
+                region=self._region,
+                route_table_id=rt_info.get('RouteTableId'),
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+                vpc_id=self._vpc_id
+            )
+            self._routing_tables.append(routing_table)
+
+        return self._routing_tables
+
     @property
     def cidr_block(self):
         return self._cidr_block
@@ -147,6 +170,12 @@ class VPC(_vpc):
     @property
     def subnets(self):
         return self._get_subnets()
+
+    @property
+    def routing_tables(self):
+        return self._routing_tables
+
+
 
     def __del__(self):
         # Cleanup resources if needed
