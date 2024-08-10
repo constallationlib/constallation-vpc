@@ -1,22 +1,21 @@
-from _vpc import _vpc
-from errors import ErrorHandler
+from ._vpc import _vpc
+from .errors import ErrorHandler
 
 class Subnet(_vpc):
     def __init__(self, region: str, subnet_id: str = None, aws_access_key: str = None,
-                 aws_access_secret_key: str = None, aws_sts_session_token: str = None,
-                 vpc_id: str = None, cidr_block: str = None, availability_zone: str = None):
+                 aws_access_secret_key: str = None, vpc_id: str = None,
+                 cidr_block: str = None, availability_zone: str = None):
         self._subnet_id = subnet_id
         self._region = region
         self._aws_access_key = aws_access_key
         self._aws_access_secret_key = aws_access_secret_key
-        self._aws_sts_token = aws_sts_session_token
         self._vpc_id = vpc_id
         self._cidr_block = cidr_block
         self._availability_zone = availability_zone
         self._error_handler = ErrorHandler()
 
-        super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key, aws_sts_session_token=self._aws_sts_token)
-        del self._aws_sts_token, self._aws_access_key, self._aws_access_secret_key
+        super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key)
+        del self._aws_access_key, self._aws_access_secret_key
         self._initialize_subnet()
 
     def _initialize_subnet(self):
@@ -59,7 +58,6 @@ class Subnet(_vpc):
                 subnet_id=x["SubnetId"],
                 aws_access_key=self._aws_access_key,
                 aws_access_secret_key=self._aws_access_secret_key,
-                aws_sts_session_token=self._aws_sts_token,
             )
 
     def delete_subnet(self, subnet_id: str = None) -> dict:
