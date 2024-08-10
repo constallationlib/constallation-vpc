@@ -5,5 +5,5 @@ __email__ = "coulterstutz@gmail.com"
 __license__ = "MIT"
 from .subnet import Subnet
 from .vpc import VPC
-from .rt import RoutingTable
+from .routing_table import RoutingTable
 __all__ = ["Subnet", "VPC", "RoutingTable"]
