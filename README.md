@@ -14,6 +14,7 @@
   - Integrate Into VPCs
 - #### **<span style="color:red;">0.2.0a3</span>**
   - Integrate Into Subnets
+  - Created Client Not Installed Error
 - #### **<span style="color:red;">0.2.0a4 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
     - InvalidRouteTableID.NotFound
