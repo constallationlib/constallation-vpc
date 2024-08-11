@@ -17,22 +17,22 @@
   - Catch AWS Client Not Installed Error
 - #### **<span style="color:red;">0.2.0a4 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
-    - InvalidRouteTableID.NotFound
-    - InvalidRoute.NotFound
-    - RouteAlreadyExists
+    - `InvalidRouteTableID.NotFound`
+    - `InvalidRoute.NotFound`
+    - `RouteAlreadyExists`
 - #### **<span style="color:red;">0.2.0a5 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
-      - DependencyViolation
-      - InvalidRouteTableAssociationID.NotFound
+      - `DependencyViolation`
+      - `InvalidRouteTableAssociationID.NotFound`
+    - Update Docs for VPCs
 - #### **<span style="color:red;">0.2.0a6 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
-    - InvalidRouteTableID.Malformed
-    - UnauthorizedOperation
+    - `InvalidRouteTableID.Malformed`
+    - `UnauthorizedOperation`
+  - Update Docs For RoutingTable
 - #### **<span style="color:red;">0.2.0a7 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
-    - InvalidParameterValue
-    - RequestLimitExceeded
-  - Update Docs for VPCs
-  - Update Docs For RoutingTable
+    - `InvalidParameterValue`
+    - `RequestLimitExceeded`
   - Update Docs For Subnet
   - Update Errors Docs
