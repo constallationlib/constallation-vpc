@@ -15,9 +15,9 @@ class _vpc:
                 "AWS_ACCESS_KEY_ID": self._access_key,
                 "AWS_SECRET_ACCESS_KEY": self._secret_key
             }
-
-        process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
-        stdout, stderr = process.communicate()
+        try:
+            process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
+            stdout, stderr = process.communicate()
 
         if process.returncode != 0:
             return {"Error": stderr}
