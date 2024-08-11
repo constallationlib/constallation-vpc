@@ -118,6 +118,12 @@ class RouteNotFound(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRoute.NotFound"
 
+class RouteAlreadyExists(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route already exists."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "RouteAlreadyExists"
+
 class AccessDeniedError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "Access denied. You do not have the necessary permissions for this operation."
@@ -224,6 +230,8 @@ class ErrorHandler:
                 raise RouteTableIDNotFound(operation, error_message)
             elif error_code == "InvalidRoute.NotFound":
                 raise RouteNotFound(operation, error_message)
+            elif error_code == "RouteAlreadyExists":
+                raise RouteAlreadyExists(operation, error_message)
             elif error_code == "AccessDenied":
                 raise AccessDeniedError(operation, error_message)
             elif error_code == "AuthFailure":
