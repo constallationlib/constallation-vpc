@@ -1,5 +1,10 @@
 import re as _re
 
+class ClientNotFoundError(Exception):
+    def __init__(self):
+        super().__init__("It appears like the AWS CLI client is not installed! To fix please visit 'https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html'")
+
+
 class SubnetError(Exception):
     def __init__(self, operation, message, *args):
         self.operation = operation

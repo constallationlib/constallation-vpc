@@ -1,3 +1,4 @@
+from .errors import ClientNotFoundError
 import subprocess as _subprocess
 import json
 
@@ -8,17 +9,17 @@ class _vpc:
         self._secret_key = aws_access_secret_key
 
     def _run_aws_command(self, cmd: list) -> dict:
-        # Set environment variables for AWS credentials if provided
         env = None
         if self._access_key and self._secret_key:
             env = {
                 "AWS_ACCESS_KEY_ID": self._access_key,
                 "AWS_SECRET_ACCESS_KEY": self._secret_key
             }
-
-        process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
-        stdout, stderr = process.communicate()
-
+        try:
+            process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
+            stdout, stderr = process.communicate()
+        except FileNotFoundError:
+            raise ClientNotFoundError()
         if process.returncode != 0:
             return {"Error": stderr}
 
