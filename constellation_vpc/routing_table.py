@@ -69,12 +69,31 @@ class RoutingTable(_vpc):
             self._error_handler.parse_and_raise(result)
         return result
 
-    def describe_route_table(self, route_table_id: str = None) -> dict:
-        route_table_id = route_table_id or self._route_table_id
-        result = super()._describe_route_table(route_table_id)
+    def describe_route_tables(self):
+        """
+        Fetches all route tables associated with the VPC of this subnet and returns a list of RoutingTable objects.
+        """
+        if not self._vpc_id:
+            raise ValueError("VPC ID is not available. Cannot describe route tables.")
+
+        # Fetch route tables associated with the VPC
+        result = super()._describe_route_tables(self._vpc_id)
         if "Error" in result:
             self._error_handler.parse_and_raise(result)
-        return result
+
+        routing_tables_info = result.get('RouteTables', [])
+        routing_tables = []
+
+        for rt_info in routing_tables_info:
+            routing_table = RoutingTable(
+                region=self._region,
+                route_table_id=rt_info.get('RouteTableId'),
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+            )
+            routing_tables.append(routing_table)
+
+        return routing_tables
 
     @property
     def route_table_id(self):

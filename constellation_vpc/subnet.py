@@ -50,7 +50,7 @@ class Subnet(_vpc):
                 self._initialize_subnet()
 
     def describe_route_tables(self):
-        print(super()._describe_route_tables())
+        # get all route tables attached to the vpc and return each as a rt.RoutingTable
 
     def create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str):
         x = super()._create_subnet(vpc_id, cidr_block, availability_zone)
