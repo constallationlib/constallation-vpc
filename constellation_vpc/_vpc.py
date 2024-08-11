@@ -9,7 +9,6 @@ class _vpc:
         self._secret_key = aws_access_secret_key
 
     def _run_aws_command(self, cmd: list) -> dict:
-        # Set environment variables for AWS credentials if provided
         env = None
         if self._access_key and self._secret_key:
             env = {
