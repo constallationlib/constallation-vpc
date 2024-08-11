@@ -15,7 +15,7 @@
 - #### **<span style="color:red;">0.2.0a3</span>**
   - Integrate Into Subnets
   - Catch AWS Client Not Installed Error
-- #### **<span style="color:red;">0.2.0a4 (Planned)</span>**
+- #### **<span style="color:red;">0.2.0a4</span>**
   - Handle The Following AWS CLI Error Codes
     - `InvalidRouteTableID.NotFound`
     - `InvalidRoute.NotFound`
