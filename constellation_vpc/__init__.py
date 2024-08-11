@@ -6,4 +6,5 @@ __license__ = "MIT"
 from .subnet import Subnet
 from .vpc import VPC
 from .routing_table import RoutingTable
-__all__ = ["Subnet", "VPC", "RoutingTable"]
+from .internet_gateway import InternetGateway
+__all__ = ["Subnet", "VPC", "RoutingTable", "InternetGateway"]
