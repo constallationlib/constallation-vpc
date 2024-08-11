@@ -1,3 +1,4 @@
+from .errors import ClientNotFoundError
 import subprocess as _subprocess
 import json
 
@@ -18,7 +19,8 @@ class _vpc:
         try:
             process = _subprocess.Popen(cmd, stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, text=True, env=env)
             stdout, stderr = process.communicate()
-
+        except FileNotFoundError:
+            raise ClientNotFoundError()
         if process.returncode != 0:
             return {"Error": stderr}
 
