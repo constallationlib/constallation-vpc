@@ -4,7 +4,6 @@ class ClientNotFoundError(Exception):
     def __init__(self):
         super().__init__("It appears like the AWS CLI client is not installed! To fix please visit 'https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html'")
 
-
 class SubnetError(Exception):
     def __init__(self, operation, message, *args):
         self.operation = operation
@@ -106,6 +105,24 @@ class VPCAttachmentError(VPCError):
         formatted_message = "There was an error attaching the VPC to the specified resource."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.Attachment"
+
+class RouteTableIDNotFound(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route table ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidRouteTableID.NotFound"
+
+class RouteNotFound(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidRoute.NotFound"
+
+class RouteAlreadyExists(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route already exists."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "RouteAlreadyExists"
 
 class AccessDeniedError(Exception):
     def __init__(self, operation, message, *args):
@@ -209,6 +226,12 @@ class ErrorHandler:
                 raise VPCDependentServiceError(operation, error_message)
             elif error_code == "InvalidVpc.Attachment":
                 raise VPCAttachmentError(operation, error_message)
+            elif error_code == "InvalidRouteTableID.NotFound":
+                raise RouteTableIDNotFound(operation, error_message)
+            elif error_code == "InvalidRoute.NotFound":
+                raise RouteNotFound(operation, error_message)
+            elif error_code == "RouteAlreadyExists":
+                raise RouteAlreadyExists(operation, error_message)
             elif error_code == "AccessDenied":
                 raise AccessDeniedError(operation, error_message)
             elif error_code == "AuthFailure":
