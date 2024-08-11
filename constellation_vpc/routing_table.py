@@ -1,11 +1,11 @@
-from _vpc import _vpc
-from errors import ErrorHandler
+from ._vpc import _vpc
+from .errors import ErrorHandler
 
 class RoutingTable(_vpc):
-    def __init__(self, region: str, route_table_id: str = None, vpc_id: str = None, aws_access_key: str = None,
+    def __init__(self, region: str, route_table_id: str = None, aws_access_key: str = None,
                  aws_access_secret_key: str = None, aws_session_token: str = None):
         self._route_table_id = route_table_id
-        self._vpc_id = vpc_id
+        self._vpc_id = None
         self._region = region
         self._aws_access_key = aws_access_key
         self._aws_access_secret_key = aws_access_secret_key

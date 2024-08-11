@@ -1,5 +1,6 @@
 from ._vpc import _vpc
 from .errors import ErrorHandler
+from .routing_table import RoutingTable
 
 class Subnet(_vpc):
     def __init__(self, region: str, subnet_id: str = None, aws_access_key: str = None,
@@ -47,6 +48,9 @@ class Subnet(_vpc):
                 self._cidr_block = x["CidrBlock"]
                 self._availability_zone = x["Subnet"]["AvailabilityZone"]
                 self._initialize_subnet()
+
+    def describe_route_tables(self):
+        print(super()._describe_route_tables())
 
     def create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str):
         x = super()._create_subnet(vpc_id, cidr_block, availability_zone)
