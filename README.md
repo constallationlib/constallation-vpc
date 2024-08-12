@@ -12,7 +12,7 @@
   - Update Docs, integration preperation
 - #### **<span style="color:red;">0.2.0a2</span>**
   - Integrate Into VPCs
-- #### **<span style="color:red;">0.2.0a4</span>**
+- #### **<span style="color:red;">0.2.0a3</span>**
   - Integrate Into Subnets
   - Catch AWS Client Not Installed Error
 - #### **<span style="color:red;">0.2.0a4</span>**
