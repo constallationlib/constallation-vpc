@@ -112,6 +112,12 @@ class RouteTableIDNotFound(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRouteTableID.NotFound"
 
+class InvalidRouteTableIDMalformed(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route table ID is malformed."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidRouteTableID.Malformed"
+
 class RouteNotFound(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified route was not found."
@@ -135,6 +141,12 @@ class AccessDeniedError(Exception):
         formatted_message = "Access denied. You do not have the necessary permissions for this operation."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "AccessDenied"
+
+class UnauthorizedOperationError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "You are not authorized to perform this operation."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "UnauthorizedOperation"
 
 class AuthFailureError(Exception):
     def __init__(self, operation, message, *args):
@@ -240,6 +252,8 @@ class ErrorHandler:
                 raise VPCAttachmentError(operation, error_message)
             elif error_code == "InvalidRouteTableID.NotFound":
                 raise RouteTableIDNotFound(operation, error_message)
+            elif error_code == "InvalidRouteTableID.Malformed":
+                raise InvalidRouteTableIDMalformed(operation, error_message)
             elif error_code == "InvalidRouteTableAssociationID.NotFound":
                 raise InvalidRouteTableAssociationIDNotFound(operation, error_message)
             elif error_code == "InvalidRoute.NotFound":
@@ -248,6 +262,8 @@ class ErrorHandler:
                 raise RouteAlreadyExists(operation, error_message)
             elif error_code == "AccessDenied":
                 raise AccessDeniedError(operation, error_message)
+            elif error_code == "UnauthorizedOperation":
+                raise UnauthorizedOperationError(operation, error_message)
             elif error_code == "AuthFailure":
                 raise AuthFailureError(operation, error_message)
             elif error_code == "RequestLimitExceeded":
