@@ -19,6 +19,3 @@
   - Update Docs For RoutingTable
   - Update Docs For Subnet
   - Update Errors Docs
-- #### **<span style="color:red;">0.2.1a2 (Planned)</span>**
-  - Update Docs For Subnet
-  - Update Errors Docs
