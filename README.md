@@ -5,21 +5,6 @@
 
 ***
 ### Changelist
-- #### **<span style="color:red;">0.2.0a0</span>**
-  - Added Routing Table Class
-    - Potentially unstable and untested!
-- #### **<span style="color:red;">0.2.0a1</span>**
-  - Update Docs, integration preperation
-- #### **<span style="color:red;">0.2.0a2</span>**
-  - Integrate Into VPCs
-- #### **<span style="color:red;">0.2.0a3</span>**
-  - Integrate Into Subnets
-  - Catch AWS Client Not Installed Error
-- #### **<span style="color:red;">0.2.0a4</span>**
-  - Handle The Following AWS CLI Error Codes
-    - `InvalidRouteTableID.NotFound`
-    - `InvalidRoute.NotFound`
-    - `RouteAlreadyExists`
 - #### **<span style="color:red;">0.2.1a0</span>**
   - Handle The Following AWS CLI Error Codes
       - `DependencyViolation`
