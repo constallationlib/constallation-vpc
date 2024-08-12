@@ -1,7 +1,7 @@
 # constallation-vpc
-## Version 0.2.0a4
+## Version 0.2.1a0
 ### **<span style="color:red;">Warning | Do Not Use for anything important</span>**
-**The version _0.2.0a4 is a package from the alpha stages and also pre-release** and has **undergone very minimal testing.** This version was built on `08/10/2024` Please use something more modern and closer to latest as this package is not secure for any actual use and its release serves archival means. 
+**The version _0.2.1a0 is a package from the alpha stages and also pre-release** and has **undergone very minimal testing.** This version was built on `08/11/2024` Please use something more modern and closer to latest as this package is not secure for any actual use and its release serves archival means. 
 
 ***
 ### Changelist
@@ -20,17 +20,17 @@
     - `InvalidRouteTableID.NotFound`
     - `InvalidRoute.NotFound`
     - `RouteAlreadyExists`
-- #### **<span style="color:red;">0.2.0a5 (Planned)</span>**
+- #### **<span style="color:red;">0.2.1a0</span>**
   - Handle The Following AWS CLI Error Codes
       - `DependencyViolation`
       - `InvalidRouteTableAssociationID.NotFound`
     - Update Docs for VPCs
-- #### **<span style="color:red;">0.2.0a6 (Planned)</span>**
+- #### **<span style="color:red;">0.2.1a2 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
     - `InvalidRouteTableID.Malformed`
     - `UnauthorizedOperation`
   - Update Docs For RoutingTable
-- #### **<span style="color:red;">0.2.0a7 (Planned)</span>**
+- #### **<span style="color:red;">0.2.1a3 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
     - `InvalidParameterValue`
     - `RequestLimitExceeded`
