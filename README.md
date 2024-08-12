@@ -10,12 +10,12 @@
       - `DependencyViolation`
       - `InvalidRouteTableAssociationID.NotFound`
     - Update Docs for VPCs
-- #### **<span style="color:red;">0.2.1a2 (Planned)</span>**
+- #### **<span style="color:red;">0.2.1a1 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
     - `InvalidRouteTableID.Malformed`
     - `UnauthorizedOperation`
   - Update Docs For RoutingTable
-- #### **<span style="color:red;">0.2.1a3 (Planned)</span>**
+- #### **<span style="color:red;">0.2.1a2 (Planned)</span>**
   - Handle The Following AWS CLI Error Codes
     - `InvalidParameterValue`
     - `RequestLimitExceeded`
