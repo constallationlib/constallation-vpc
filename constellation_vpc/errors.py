@@ -124,6 +124,12 @@ class RouteAlreadyExists(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "RouteAlreadyExists"
 
+class InvalidRouteTableAssociationIDNotFound(VPCError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified route table association ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidRouteTableAssociationID.NotFound"
+
 class AccessDeniedError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "Access denied. You do not have the necessary permissions for this operation."
@@ -190,6 +196,12 @@ class OptInRequiredError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "OptInRequired"
 
+class DependencyViolationError(Exception):
+    def __init__(self, operation, message, *args):
+        formatted_message = "The request failed because a resource is dependent on this resource."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "DependencyViolation"
+
 class ErrorHandler:
     def parse_and_raise(self, error):
         error_message = error.get('Error', '')
@@ -228,6 +240,8 @@ class ErrorHandler:
                 raise VPCAttachmentError(operation, error_message)
             elif error_code == "InvalidRouteTableID.NotFound":
                 raise RouteTableIDNotFound(operation, error_message)
+            elif error_code == "InvalidRouteTableAssociationID.NotFound":
+                raise InvalidRouteTableAssociationIDNotFound(operation, error_message)
             elif error_code == "InvalidRoute.NotFound":
                 raise RouteNotFound(operation, error_message)
             elif error_code == "RouteAlreadyExists":
@@ -254,6 +268,8 @@ class ErrorHandler:
                 raise InvalidClientTokenIdError(operation, error_message)
             elif error_code == "OptInRequired":
                 raise OptInRequiredError(operation, error_message)
+            elif error_code == "DependencyViolation":
+                raise DependencyViolationError(operation, error_message)
             else:
                 raise Exception(f"Unknown error occurred during {operation}: {error_message}")
         else:
