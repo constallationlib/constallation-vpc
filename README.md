@@ -15,7 +15,3 @@
     - `UnauthorizedOperation`
     - `InvalidParameterValue`
     - `RequestLimitExceeded`
-  - Update Docs for VPCs
-  - Update Docs For RoutingTable
-  - Update Docs For Subnet
-  - Update Errors Docs
