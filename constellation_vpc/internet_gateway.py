@@ -13,7 +13,7 @@ class InternetGateway(_vpc):
         super().__init__(region=region, aws_access_key=self._aws_access_key, aws_access_secret_key=self._aws_access_secret_key)
         del self._aws_access_key, self._aws_access_secret_key
 
-    def _create_internet_gateway(self, igw_name: str = "constellation-igw") -> dict:
+    def create_internet_gateway(self, igw_name: str = "constellation-igw") -> dict:
         igw_creation_result = super()._create_internet_gateway(igw_name)
 
         if "Error" in igw_creation_result:
@@ -21,7 +21,7 @@ class InternetGateway(_vpc):
 
         return igw_creation_result
 
-    def _attach_internet_gateway(self, vpc_id: str) -> dict:
+    def attach_internet_gateway(self, vpc_id: str) -> dict:
         if not self._igw_id:
             return {"Error": "Internet Gateway ID is required to attach to VPC"}
 
@@ -32,7 +32,7 @@ class InternetGateway(_vpc):
 
         return attach_result
 
-    def _detach_internet_gateway(self, vpc_id: str) -> dict:
+    def detach_internet_gateway(self, vpc_id: str) -> dict:
         if not self._igw_id:
             return {"Error": "Internet Gateway ID is required to detach from VPC"}
 
@@ -43,7 +43,7 @@ class InternetGateway(_vpc):
 
         return detach_result
 
-    def _delete_internet_gateway(self) -> dict:
+    def delete_internet_gateway(self) -> dict:
         if not self._igw_id:
             return {"Error": "Internet Gateway ID is required to delete"}
 
@@ -54,6 +54,6 @@ class InternetGateway(_vpc):
 
         return delete_result
 
-    def _describe_internet_gateways(self, vpc_id: str = None) -> dict:
+    def describe_internet_gateways(self, vpc_id: str = None) -> dict:
         return super()._describe_internet_gateways(vpc_id)
 

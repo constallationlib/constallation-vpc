@@ -7,7 +7,7 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.9.0"
+python = ">=3.9.19"
 
 [build-system]
 requires = ["poetry-core"]
