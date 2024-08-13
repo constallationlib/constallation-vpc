@@ -6,3 +6,6 @@
 ***
 ### Changelist
 - #### **<span style="color:red;">0.3.0a0</span>**
+  - Added Internet Gateway funcs to _vpc base class
+  - Created `InternetGateway` class
+  - Write docs for InternetGateway
