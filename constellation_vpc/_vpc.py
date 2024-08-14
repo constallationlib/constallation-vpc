@@ -353,6 +353,73 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _create_internet_gateway(self, igw_name: str = "constellation-igw") -> dict:
+        cmd = [
+            "aws", "ec2", "create-internet-gateway",
+            "--region", self.region_name
+        ]
+
+        igw_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in igw_creation_result:
+            return igw_creation_result
+
+        igw_id = igw_creation_result.get('InternetGateway', {}).get('InternetGatewayId')
+        if not igw_id:
+            return {"Error": "Internet Gateway ID not found in creation response"}
+
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", igw_id,
+            "--tags", f"Key=Name,Value={igw_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"InternetGatewayId": igw_id, "InternetGatewayName": igw_name, "TagResult": tag_result}
+
+    def _attach_internet_gateway(self, igw_id: str, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "attach-internet-gateway",
+            "--internet-gateway-id", igw_id,
+            "--vpc-id", vpc_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _detach_internet_gateway(self, igw_id: str, vpc_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "detach-internet-gateway",
+            "--internet-gateway-id", igw_id,
+            "--vpc-id", vpc_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _delete_internet_gateway(self, igw_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-internet-gateway",
+            "--internet-gateway-id", igw_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_internet_gateways(self, vpc_id: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-internet-gateways",
+            "--region", self.region_name
+        ]
+
+        if vpc_id:
+            cmd.extend(["--filters", f"Name=attachment.vpc-id,Values={vpc_id}"])
+
+        return self._run_aws_command(cmd)
+
     @property
     def region(self) -> str:
         if self.region_name:
