@@ -1,14 +1,18 @@
 import re as _re
 
+
 class ClientNotFoundError(Exception):
     def __init__(self):
-        super().__init__("It appears like the AWS CLI client is not installed! To fix please visit 'https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html'")
+        super().__init__(
+            "It appears like the AWS CLI client is not installed! To fix please visit 'https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html'")
+
 
 class SubnetError(Exception):
     def __init__(self, operation, message, *args):
         self.operation = operation
         self.message = message
         super().__init__(message, *args)
+
 
 class SubnetCIDRConflicts(SubnetError):
     def __init__(self, operation, original_message, *args):
@@ -20,6 +24,7 @@ class SubnetCIDRConflicts(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Conflict"
 
+
 class SubnetRangeError(SubnetError):
     def __init__(self, operation, original_message, *args):
         if (range_match := _re.search(r"'(.*?)'", original_message)):
@@ -30,11 +35,13 @@ class SubnetRangeError(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Range"
 
+
 class SubnetIDNotFound(SubnetError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified subnet ID was not found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.ID.NotFound"
+
 
 class SubnetZoneMismatch(SubnetError):
     def __init__(self, operation, original_message, *args):
@@ -42,11 +49,13 @@ class SubnetZoneMismatch(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.ZoneMismatch"
 
+
 class SubnetInUse(SubnetError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The subnet is currently in use and cannot be modified or deleted."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.InUse"
+
 
 class SubnetAssociationError(SubnetError):
     def __init__(self, operation, original_message, *args):
@@ -54,11 +63,13 @@ class SubnetAssociationError(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Association"
 
+
 class SubnetDependentServiceError(SubnetError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The subnet is being used by a dependent service and cannot be modified or deleted."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.DependentService"
+
 
 class SubnetAttachmentError(SubnetError):
     def __init__(self, operation, original_message, *args):
@@ -66,11 +77,13 @@ class SubnetAttachmentError(SubnetError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidSubnet.Attachment"
 
+
 class VPCError(Exception):
     def __init__(self, operation, message, *args):
         self.operation = operation
         self.message = message
         super().__init__(message, *args)
+
 
 class VPCCIDRConflicts(VPCError):
     def __init__(self, operation, original_message, *args):
@@ -82,11 +95,13 @@ class VPCCIDRConflicts(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.Conflict"
 
+
 class VPCIDNotFound(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified VPC ID was not found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.ID.NotFound"
+
 
 class VPCInUse(VPCError):
     def __init__(self, operation, original_message, *args):
@@ -94,11 +109,13 @@ class VPCInUse(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.InUse"
 
+
 class VPCDependentServiceError(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The VPC is being used by a dependent service and cannot be modified or deleted."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.DependentService"
+
 
 class VPCAttachmentError(VPCError):
     def __init__(self, operation, original_message, *args):
@@ -106,11 +123,13 @@ class VPCAttachmentError(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidVpc.Attachment"
 
+
 class RouteTableIDNotFound(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified route table ID was not found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRouteTableID.NotFound"
+
 
 class InvalidRouteTableIDMalformed(VPCError):
     def __init__(self, operation, original_message, *args):
@@ -118,11 +137,13 @@ class InvalidRouteTableIDMalformed(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRouteTableID.Malformed"
 
+
 class RouteNotFound(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified route was not found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRoute.NotFound"
+
 
 class RouteAlreadyExists(VPCError):
     def __init__(self, operation, original_message, *args):
@@ -130,11 +151,13 @@ class RouteAlreadyExists(VPCError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "RouteAlreadyExists"
 
+
 class InvalidRouteTableAssociationIDNotFound(VPCError):
     def __init__(self, operation, original_message, *args):
         formatted_message = "The specified route table association ID was not found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidRouteTableAssociationID.NotFound"
+
 
 class AccessDeniedError(Exception):
     def __init__(self, operation, message, *args):
@@ -142,11 +165,13 @@ class AccessDeniedError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "AccessDenied"
 
+
 class UnauthorizedOperationError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "You are not authorized to perform this operation."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "UnauthorizedOperation"
+
 
 class AuthFailureError(Exception):
     def __init__(self, operation, message, *args):
@@ -154,11 +179,13 @@ class AuthFailureError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "AuthFailure"
 
+
 class RequestLimitExceededError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "Request limit exceeded. Please wait and try again later."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "RequestLimitExceeded"
+
 
 class ThrottlingExceptionError(Exception):
     def __init__(self, operation, message, *args):
@@ -166,11 +193,13 @@ class ThrottlingExceptionError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "ThrottlingException"
 
+
 class ResourceNotFoundExceptionError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "The specified resource could not be found."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "ResourceNotFoundException"
+
 
 class InvalidParameterValueError(Exception):
     def __init__(self, operation, message, *args):
@@ -178,11 +207,13 @@ class InvalidParameterValueError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidParameterValue"
 
+
 class ServiceUnavailableError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "The service is currently unavailable. Please try again later."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "ServiceUnavailable"
+
 
 class InternalFailureError(Exception):
     def __init__(self, operation, message, *args):
@@ -190,11 +221,13 @@ class InternalFailureError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InternalFailure"
 
+
 class ValidationExceptionError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "The input provided does not meet the required constraints."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "ValidationException"
+
 
 class InvalidClientTokenIdError(Exception):
     def __init__(self, operation, message, *args):
@@ -202,17 +235,62 @@ class InvalidClientTokenIdError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "InvalidClientTokenId"
 
+
 class OptInRequiredError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "You must opt in to use this service."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "OptInRequired"
 
+
 class DependencyViolationError(Exception):
     def __init__(self, operation, message, *args):
         formatted_message = "The request failed because a resource is dependent on this resource."
         super().__init__(operation, formatted_message, *args)
         self.error_code = "DependencyViolation"
+
+
+class NatGatewayError(Exception):
+    def __init__(self, operation, message, *args):
+        self.operation = operation
+        self.message = message
+        super().__init__(message, *args)
+
+
+class NatGatewayIDNotFound(NatGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified NAT Gateway ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidNatGatewayID.NotFound"
+
+
+class NatGatewayInUse(NatGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The NAT Gateway is currently in use and cannot be deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidNatGateway.InUse"
+
+
+class NatGatewayLimitExceeded(NatGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The maximum number of NAT Gateways has been reached."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "NatGatewayLimitExceeded"
+
+
+class NatGatewayNotFound(NatGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The NAT Gateway was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "NatGatewayNotFound"
+
+
+class NatGatewayDependencyViolation(NatGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The NAT Gateway is being used by a dependent resource and cannot be deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "NatGatewayDependencyViolation"
+
 
 class ErrorHandler:
     def parse_and_raise(self, error):
@@ -286,6 +364,16 @@ class ErrorHandler:
                 raise OptInRequiredError(operation, error_message)
             elif error_code == "DependencyViolation":
                 raise DependencyViolationError(operation, error_message)
+            elif error_code == "InvalidNatGatewayID.NotFound":
+                raise NatGatewayIDNotFound(operation, error_message)
+            elif error_code == "InvalidNatGateway.InUse":
+                raise NatGatewayInUse(operation, error_message)
+            elif error_code == "NatGatewayLimitExceeded":
+                raise NatGatewayLimitExceeded(operation, error_message)
+            elif error_code == "NatGatewayNotFound":
+                raise NatGatewayNotFound(operation, error_message)
+            elif error_code == "NatGatewayDependencyViolation":
+                raise NatGatewayDependencyViolation(operation, error_message)
             else:
                 raise Exception(f"Unknown error occurred during {operation}: {error_message}")
         else:
