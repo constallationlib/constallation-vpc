@@ -420,6 +420,79 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _create_nat_gateway(self, subnet_id: str, allocation_id: str, nat_gateway_name: str = "constellation-nat-gateway") -> dict:
+        cmd = [
+            "aws", "ec2", "create-nat-gateway",
+            "--subnet-id", subnet_id,
+            "--allocation-id", allocation_id,
+            "--region", self.region_name
+        ]
+
+        nat_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in nat_creation_result:
+            return nat_creation_result
+
+        nat_gateway_id = nat_creation_result.get('NatGateway', {}).get('NatGatewayId')
+        if not nat_gateway_id:
+            return {"Error": "NAT Gateway ID not found in creation response"}
+
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", nat_gateway_id,
+            "--tags", f"Key=Name,Value={nat_gateway_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"NatGatewayId": nat_gateway_id, "NatGatewayName": nat_gateway_name, "TagResult": tag_result}
+
+    def _delete_nat_gateway(self, nat_gateway_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-nat-gateway",
+            "--nat-gateway-id", nat_gateway_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_nat_gateways(self, vpc_id: str = None, subnet_id: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-nat-gateways",
+            "--region", self.region_name
+        ]
+
+        if vpc_id:
+            cmd.extend(["--filter", f"Name=vpc-id,Values={vpc_id}"])
+        if subnet_id:
+            cmd.extend(["--filter", f"Name=subnet-id,Values={subnet_id}"])
+
+        return self._run_aws_command(cmd)
+
+    def _associate_nat_gateway(self, nat_gateway_id: str, route_table_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "create-route",
+            "--route-table-id", route_table_id,
+            "--nat-gateway-id", nat_gateway_id,
+            "--destination-cidr-block", "0.0.0.0/0",
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _disassociate_nat_gateway(self, route_table_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-route",
+            "--route-table-id", route_table_id,
+            "--destination-cidr-block", "0.0.0.0/0",
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+
     @property
     def region(self) -> str:
         if self.region_name:
