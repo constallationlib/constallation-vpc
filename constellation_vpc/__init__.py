@@ -8,4 +8,5 @@ from .vpc import VPC
 from .routing_table import RoutingTable
 from .internet_gateway import InternetGateway
 from .nat_gateway import NatGateway
-__all__ = ["Subnet", "VPC", "RoutingTable", "InternetGateway", "NatGateway"]
+from .peering_connection import PeeringConnection
+__all__ = ["Subnet", "VPC", "RoutingTable", "InternetGateway", "NatGateway", "PeeringConnection"]
