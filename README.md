@@ -8,3 +8,4 @@
 - #### **<span style="color:red;">0.4.0a0</span>**
   - Added NAT Gateway funcs to _vpc base class
   - Created `NATGateway` class
+  - Wrote docs for `NatGateway`
