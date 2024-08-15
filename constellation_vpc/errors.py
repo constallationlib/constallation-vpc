@@ -214,6 +214,36 @@ class DependencyViolationError(Exception):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "DependencyViolation"
 
+class InternetGatewayError(Exception):
+    def __init__(self, operation, message, *args):
+        self.operation = operation
+        self.message = message
+        super().__init__(message, *args)
+
+class InternetGatewayIDNotFound(InternetGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified Internet Gateway ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidInternetGatewayID.NotFound"
+
+class InternetGatewayAlreadyAttached(InternetGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The Internet Gateway is already attached to a VPC."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InternetGatewayAlreadyAttached"
+
+class InternetGatewayInUse(InternetGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The Internet Gateway is currently in use and cannot be deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InternetGatewayInUse"
+
+class InternetGatewayAttachmentError(InternetGatewayError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "There was an error attaching the Internet Gateway to the VPC."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidInternetGateway.Attachment"
+
 class ErrorHandler:
     def parse_and_raise(self, error):
         error_message = error.get('Error', '')
@@ -286,6 +316,14 @@ class ErrorHandler:
                 raise OptInRequiredError(operation, error_message)
             elif error_code == "DependencyViolation":
                 raise DependencyViolationError(operation, error_message)
+            elif error_code == "InvalidInternetGatewayID.NotFound":
+                raise InternetGatewayIDNotFound(operation, error_message)
+            elif error_code == "InternetGatewayAlreadyAttached":
+                raise InternetGatewayAlreadyAttached(operation, error_message)
+            elif error_code == "InternetGatewayInUse":
+                raise InternetGatewayInUse(operation, error_message)
+            elif error_code == "InvalidInternetGateway.Attachment":
+                raise InternetGatewayAttachmentError(operation, error_message)
             else:
                 raise Exception(f"Unknown error occurred during {operation}: {error_message}")
         else:
