@@ -291,6 +291,10 @@ class NatGatewayDependencyViolation(NatGatewayError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "NatGatewayDependencyViolation"
 
+class UnknownAWSClientError(Exception):
+    def __init__(self, error_code):
+        super().__init__(f"PLEASE READ: The AWS Client threw an unknown error code '{error_code}'! Please report this immediatly by submitting an issue on https://github.com/constallationlib/constallation-vpc and using the tag 'Unknown Client Code'")
+        exit(0) # Halt immediately
 
 class ErrorHandler:
     def parse_and_raise(self, error):
@@ -375,6 +379,6 @@ class ErrorHandler:
             elif error_code == "NatGatewayDependencyViolation":
                 raise NatGatewayDependencyViolation(operation, error_message)
             else:
-                raise Exception(f"Unknown error occurred during {operation}: {error_message}")
+                raise UnknownAWSClientError(error_code)
         else:
             raise Exception("Unknown error occurred without specific details")
