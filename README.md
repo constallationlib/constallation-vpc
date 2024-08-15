@@ -9,3 +9,4 @@
   - Added Internet Gateway funcs to _vpc base class
   - Created `InternetGateway` class
   - Write docs for InternetGateway
+  - Write Errors for InternetGateway
