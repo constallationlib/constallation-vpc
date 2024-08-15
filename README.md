@@ -12,4 +12,4 @@
 - #### **<span style="color:red;">0.4.0a1</span>**
   - Added Error Handling for `_vpc` NAT Gateway functions. 
 - #### **<span style="color:red;">0.4.0a2</span>**
-  - Added custom error for an unknown error for better reporting of freak bugs.
+  - Better Unknown-Error Handling
