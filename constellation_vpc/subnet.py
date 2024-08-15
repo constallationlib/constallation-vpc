@@ -49,9 +49,6 @@ class Subnet(_vpc):
                 self._availability_zone = x["Subnet"]["AvailabilityZone"]
                 self._initialize_subnet()
 
-    def describe_route_tables(self):
-        # get all route tables attached to the vpc and return each as a rt.RoutingTable
-
     def create_subnet(self, vpc_id: str, cidr_block: str, availability_zone: str):
         x = super()._create_subnet(vpc_id, cidr_block, availability_zone)
         if "Error" in x:
