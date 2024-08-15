@@ -1,5 +1,5 @@
 __name__ = "constellation_vpc"
-__version__ = "0.4.0a0"
+__version__ = "0.5.0a0"
 __author__ = "Coulter Stutz"
 __email__ = "coulterstutz@gmail.com"
 __license__ = "MIT"
