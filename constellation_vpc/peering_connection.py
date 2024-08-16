@@ -1,7 +1,7 @@
 from ._vpc import _vpc
 from .errors import ErrorHandler
 
-class VPCPeeringConnection(_vpc):
+class PeeringConnection(_vpc):
     def __init__(self, region: str, peering_connection_id: str = None, aws_access_key: str = None, aws_access_secret_key: str = None):
         self._peering_connection_id = peering_connection_id
         self._region = region
