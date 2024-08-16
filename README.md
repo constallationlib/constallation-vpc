@@ -8,3 +8,5 @@
 - #### **<span style="color:red;">0.5.0a0</span>**
   - Added Peering Connection funcs to _vpc base class
   - Created `PeeringConnection` class
+- #### **<span style="color:red;">0.5.0a1</span>**
+  - Added Peering Connections into vpc.py
