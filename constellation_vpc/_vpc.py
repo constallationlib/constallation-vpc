@@ -588,6 +588,86 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _create_carrier_gateway(self, vpc_id: str, carrier_gateway_name: str = "constellation-carrier-gateway") -> dict:
+    cmd = [
+        "aws", "ec2", "create-carrier-gateway",
+        "--vpc-id", vpc_id,
+        "--region", self.region_name
+    ]
+
+    carrier_gateway_creation_result = self._run_aws_command(cmd)
+
+    if "Error" in carrier_gateway_creation_result:
+        return carrier_gateway_creation_result
+
+    carrier_gateway_id = carrier_gateway_creation_result.get('CarrierGateway', {}).get('CarrierGatewayId')
+    if not carrier_gateway_id:
+        return {"Error": "Carrier Gateway ID not found in creation response"}
+
+    tag_result = self._run_aws_command([
+        "aws", "ec2", "create-tags",
+        "--resources", carrier_gateway_id,
+        "--tags", f"Key=Name,Value={carrier_gateway_name}",
+        "--region", self.region_name
+    ])
+
+    if "Error" in tag_result:
+        return tag_result
+
+    return {"CarrierGatewayId": carrier_gateway_id, "CarrierGatewayName": carrier_gateway_name, "TagResult": tag_result}
+
+
+def _describe_carrier_gateways(self, vpc_id: str = None, carrier_gateway_id: str = None) -> dict:
+    cmd = [
+        "aws", "ec2", "describe-carrier-gateways",
+        "--region", self.region_name
+    ]
+
+    filters = []
+
+    if vpc_id:
+        filters.extend(["--filters", f"Name=vpc-id,Values={vpc_id}"])
+
+    if carrier_gateway_id:
+        filters.extend(["--carrier-gateway-ids", carrier_gateway_id])
+
+    cmd.extend(filters)
+
+    return self._run_aws_command(cmd)
+
+
+def _delete_carrier_gateway(self, carrier_gateway_id: str) -> dict:
+    cmd = [
+        "aws", "ec2", "delete-carrier-gateway",
+        "--carrier-gateway-id", carrier_gateway_id,
+        "--region", self.region_name
+    ]
+
+    return self._run_aws_command(cmd)
+
+
+def _associate_carrier_gateway(self, carrier_gateway_id: str, route_table_id: str) -> dict:
+    cmd = [
+        "aws", "ec2", "create-route",
+        "--route-table-id", route_table_id,
+        "--carrier-gateway-id", carrier_gateway_id,
+        "--destination-cidr-block", "0.0.0.0/0",
+        "--region", self.region_name
+    ]
+
+    return self._run_aws_command(cmd)
+
+
+def _disassociate_carrier_gateway(self, route_table_id: str) -> dict:
+    cmd = [
+        "aws", "ec2", "delete-route",
+        "--route-table-id", route_table_id,
+        "--destination-cidr-block", "0.0.0.0/0",
+        "--region", self.region_name
+    ]
+
+    return self._run_aws_command(cmd)
+
     @property
     def region(self) -> str:
         if self.region_name:
