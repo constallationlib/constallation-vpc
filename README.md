@@ -17,5 +17,3 @@
   - Added Peering Connections into vpc.py
 - #### **<span style="color:red;">0.5.0a4</span>**
   - Added ErrorHandling for Peering Connections
-  - Write Errors Docs
-  - Write a better index page
