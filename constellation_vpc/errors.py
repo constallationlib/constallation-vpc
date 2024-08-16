@@ -421,6 +421,16 @@ class ErrorHandler:
                 raise NatGatewayNotFound(operation, error_message)
             elif error_code == "NatGatewayDependencyViolation":
                 raise NatGatewayDependencyViolation(operation, error_message)
+            elif error_code == "InvalidVpcPeeringConnectionID.NotFound":
+                raise PeeringConnectionIDNotFound(operation, error_message)
+            elif error_code == "VpcPeeringConnectionAlreadyExists":
+                raise PeeringConnectionAlreadyExists(operation, error_message)
+            elif error_code == "VpcPeeringConnectionLimitExceeded":
+                raise PeeringConnectionLimitExceeded(operation, error_message)
+            elif error_code == "InvalidVpcPeeringConnection.InUse":
+                raise PeeringConnectionInUse(operation, error_message)
+            elif error_code == "VpcPeeringConnectionInvalidState":
+                raise PeeringConnectionInvalidState(operation, error_message)
             else:
                 raise UnknownAWSClientError(error_code)
         else:
