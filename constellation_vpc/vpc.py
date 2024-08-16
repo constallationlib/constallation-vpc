@@ -1,7 +1,10 @@
-from .subnet import Subnet
 from ._vpc import _vpc
 from .errors import ErrorHandler
+from .subnet import Subnet
 from .routing_table import RoutingTable
+from .peering_connection import PeeringConnection
+from .internet_gateway import InternetGateway
+from .nat_gateway import NatGateway
 
 class VPC(_vpc):
     def __init__(self, region: str, vpc_id: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
