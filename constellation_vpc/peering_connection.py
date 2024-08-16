@@ -38,6 +38,9 @@ class VPCPeeringConnection(_vpc):
         return result
 
     def describe_peering_connections(self, vpc_id: str = None, peer_vpc_id: str = None) -> dict:
+        vpc_id = vpc_id or self._vpc_id  # Use self._vpc_id if vpc_id is None
+        peer_vpc_id = peer_vpc_id or self._peer_vpc_id  # Use self._peer_vpc_id if peer_vpc_id is None
+
         result = super()._describe_vpc_peering_connections(peering_connection_id=self._peering_connection_id, vpc_id=vpc_id, peer_vpc_id=peer_vpc_id)
         if "Error" in result:
             self._error_handler.parse_and_raise(result)
@@ -52,7 +55,8 @@ class VPCPeeringConnection(_vpc):
             self._error_handler.parse_and_raise(result)
         return result
 
-    def describe_peering_connection_requests(self, vpc_id: str) -> dict:
+    def describe_peering_connection_requests(self, vpc_id: str = None) -> dict:
+        vpc_id = vpc_id or self._vpc_id  # Use self._vpc_id if vpc_id is None
         result = super()._describe_vpc_peering_connection_requests(vpc_id)
         if "Error" in result:
             self._error_handler.parse_and_raise(result)
