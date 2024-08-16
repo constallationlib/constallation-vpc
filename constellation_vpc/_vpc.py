@@ -492,6 +492,101 @@ class _vpc:
 
         return self._run_aws_command(cmd)
 
+    def _create_vpc_peering_connection(self, vpc_id: str, peer_vpc_id: str, peer_region: str = None,
+                                       peer_owner_id: str = None,
+                                       peering_name: str = "constellation-peering-connection") -> dict:
+        cmd = [
+            "aws", "ec2", "create-vpc-peering-connection",
+            "--vpc-id", vpc_id,
+            "--peer-vpc-id", peer_vpc_id,
+            "--region", self.region_name
+        ]
+
+        if peer_region:
+            cmd.extend(["--peer-region", peer_region])
+
+        if peer_owner_id:
+            cmd.extend(["--peer-owner-id", peer_owner_id])
+
+        peering_creation_result = self._run_aws_command(cmd)
+
+        if "Error" in peering_creation_result:
+            return peering_creation_result
+
+        peering_connection_id = peering_creation_result.get('VpcPeeringConnection', {}).get('VpcPeeringConnectionId')
+        if not peering_connection_id:
+            return {"Error": "VPC Peering Connection ID not found in creation response"}
+
+        tag_result = self._run_aws_command([
+            "aws", "ec2", "create-tags",
+            "--resources", peering_connection_id,
+            "--tags", f"Key=Name,Value={peering_name}",
+            "--region", self.region_name
+        ])
+
+        if "Error" in tag_result:
+            return tag_result
+
+        return {"VpcPeeringConnectionId": peering_connection_id, "PeeringConnectionName": peering_name,
+                "TagResult": tag_result}
+
+    def _accept_vpc_peering_connection(self, peering_connection_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "accept-vpc-peering-connection",
+            "--vpc-peering-connection-id", peering_connection_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _delete_vpc_peering_connection(self, peering_connection_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "delete-vpc-peering-connection",
+            "--vpc-peering-connection-id", peering_connection_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_vpc_peering_connections(self, peering_connection_id: str = None, vpc_id: str = None,
+                                          peer_vpc_id: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-vpc-peering-connections",
+            "--region", self.region_name
+        ]
+
+        filters = []
+
+        if peering_connection_id:
+            filters.extend(["--vpc-peering-connection-ids", peering_connection_id])
+
+        if vpc_id:
+            filters.extend(["--filters", f"Name=requester-vpc-info.vpc-id,Values={vpc_id}"])
+
+        if peer_vpc_id:
+            filters.extend(["--filters", f"Name=accepter-vpc-info.vpc-id,Values={peer_vpc_id}"])
+
+        cmd.extend(filters)
+
+        return self._run_aws_command(cmd)
+
+    def _reject_vpc_peering_connection(self, peering_connection_id: str) -> dict:
+        cmd = [
+            "aws", "ec2", "reject-vpc-peering-connection",
+            "--vpc-peering-connection-id", peering_connection_id,
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
+
+    def _describe_vpc_peering_connection_requests(self, vpc_id: str = None) -> dict:
+        cmd = [
+            "aws", "ec2", "describe-vpc-peering-connections",
+            "--filters", f"Name=requester-vpc-info.vpc-id,Values={vpc_id}",
+            "--region", self.region_name
+        ]
+
+        return self._run_aws_command(cmd)
 
     @property
     def region(self) -> str:

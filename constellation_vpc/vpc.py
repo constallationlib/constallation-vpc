@@ -1,7 +1,10 @@
-from .subnet import Subnet
 from ._vpc import _vpc
 from .errors import ErrorHandler
+from .subnet import Subnet
 from .routing_table import RoutingTable
+from .peering_connection import PeeringConnection
+from .internet_gateway import InternetGateway
+from .nat_gateway import NatGateway
 
 class VPC(_vpc):
     def __init__(self, region: str, vpc_id: str = None, aws_access_key: str = None, aws_access_secret_key: str = None,
@@ -131,6 +134,80 @@ class VPC(_vpc):
 
         return self._routing_tables
 
+    def _get_internet_gateways(self):
+        """
+        Fetches all Internet Gateways associated with this VPC and returns a list of initialized InternetGateway objects.
+        """
+        result = super()._describe_internet_gateways(self._vpc_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+
+        internet_gateways = result.get('InternetGateways', [])
+        self._internet_gateways = []
+
+        for igw_info in internet_gateways:
+            internet_gateway = InternetGateway(
+                region=self._region,
+                internet_gateway_id=igw_info.get('InternetGatewayId'),
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+                vpc_id=self._vpc_id
+            )
+            self._internet_gateways.append(internet_gateway)
+
+        return self._internet_gateways
+
+    def _get_nat_gateways(self):
+        """
+        Fetches all NAT Gateways associated with this VPC and returns a list of initialized NatGateway objects.
+        """
+        result = super()._describe_nat_gateways(self._vpc_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+
+        nat_gateways = result.get('NatGateways', [])
+        self._nat_gateways = []
+
+        for ngw_info in nat_gateways:
+            nat_gateway = NatGateway(
+                region=self._region,
+                nat_gateway_id=ngw_info.get('NatGatewayId'),
+                subnet_id=ngw_info.get('SubnetId'),
+                vpc_id=self._vpc_id,
+                aws_access_key=self._aws_access_key,
+                aws_access_secret_key=self._aws_access_secret_key,
+            )
+            self._nat_gateways.append(nat_gateway)
+
+        return self._nat_gateways
+
+    def _get_peering_connections(self):
+        """
+        Fetches all VPC Peering Connections associated with this VPC and returns a list of initialized PeeringConnection objects.
+        """
+        result = super()._describe_vpc_peering_connections(self._vpc_id)
+        if "Error" in result:
+            self._error_handler.parse_and_raise(result)
+
+        peering_connections = result.get('VpcPeeringConnections', [])
+        self._peering_connections = []
+
+        for pcx_info in peering_connections:
+            if pcx_info.get('AccepterVpcInfo', {}).get('VpcId') == self._vpc_id or \
+                    pcx_info.get('RequesterVpcInfo', {}).get('VpcId') == self._vpc_id:
+                peering_connection = PeeringConnection(
+                    region=self._region,
+                    peering_connection_id=pcx_info.get('VpcPeeringConnectionId'),
+                    status=pcx_info.get('Status', {}).get('Code'),
+                    requester_vpc_id=pcx_info.get('RequesterVpcInfo', {}).get('VpcId'),
+                    accepter_vpc_id=pcx_info.get('AccepterVpcInfo', {}).get('VpcId'),
+                    aws_access_key=self._aws_access_key,
+                    aws_access_secret_key=self._aws_access_secret_key
+                )
+                self._peering_connections.append(peering_connection)
+
+        return self._peering_connections
+
     @property
     def cidr_block(self):
         return self._cidr_block
@@ -169,13 +246,28 @@ class VPC(_vpc):
 
     @property
     def subnets(self):
-        return self._get_subnets()
+        self._subnets = self._get_subnets()
+        return self._subnets
 
     @property
     def routing_tables(self):
-        return self._routing_tables
+        self._routing_tables = self._get_routing_tables()
+        return self._get_routing_tables()
 
+    @property
+    def internet_gateways(self):
+        self._internet_gateways = self._get_internet_gateways()
+        return self._internet_gateways
 
+    @property
+    def nat_gateways(self):
+        self._nat_gateways = self._get_nat_gateways()
+        return self._nat_gateways
+
+    @property
+    def peering_connections(self):
+        self._peering_connections = self._get_peering_connections()
+        return self._peering_connections
 
     def __del__(self):
         # Cleanup resources if needed
