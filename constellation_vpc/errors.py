@@ -291,6 +291,49 @@ class NatGatewayDependencyViolation(NatGatewayError):
         super().__init__(operation, formatted_message, *args)
         self.error_code = "NatGatewayDependencyViolation"
 
+
+class PeeringConnectionError(Exception):
+    def __init__(self, operation, message, *args):
+        self.operation = operation
+        self.message = message
+        super().__init__(message, *args)
+
+
+class PeeringConnectionIDNotFound(PeeringConnectionError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified VPC Peering Connection ID was not found."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpcPeeringConnectionID.NotFound"
+
+
+class PeeringConnectionAlreadyExists(PeeringConnectionError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The specified VPC Peering Connection already exists."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "VpcPeeringConnectionAlreadyExists"
+
+
+class PeeringConnectionLimitExceeded(PeeringConnectionError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The maximum number of VPC Peering Connections has been reached."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "VpcPeeringConnectionLimitExceeded"
+
+
+class PeeringConnectionInUse(PeeringConnectionError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The VPC Peering Connection is currently in use and cannot be deleted."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "InvalidVpcPeeringConnection.InUse"
+
+
+class PeeringConnectionInvalidState(PeeringConnectionError):
+    def __init__(self, operation, original_message, *args):
+        formatted_message = "The VPC Peering Connection is in an invalid state."
+        super().__init__(operation, formatted_message, *args)
+        self.error_code = "VpcPeeringConnectionInvalidState"
+
+
 class UnknownAWSClientError(Exception):
     def __init__(self, error_code):
         super().__init__(f"PLEASE READ: The AWS Client threw an unknown error code '{error_code}'! Please report this immediatly by submitting an issue on https://github.com/constallationlib/constallation-vpc and using the tag 'Unknown Client Code'")
@@ -378,6 +421,16 @@ class ErrorHandler:
                 raise NatGatewayNotFound(operation, error_message)
             elif error_code == "NatGatewayDependencyViolation":
                 raise NatGatewayDependencyViolation(operation, error_message)
+            elif error_code == "InvalidVpcPeeringConnectionID.NotFound":
+                raise PeeringConnectionIDNotFound(operation, error_message)
+            elif error_code == "VpcPeeringConnectionAlreadyExists":
+                raise PeeringConnectionAlreadyExists(operation, error_message)
+            elif error_code == "VpcPeeringConnectionLimitExceeded":
+                raise PeeringConnectionLimitExceeded(operation, error_message)
+            elif error_code == "InvalidVpcPeeringConnection.InUse":
+                raise PeeringConnectionInUse(operation, error_message)
+            elif error_code == "VpcPeeringConnectionInvalidState":
+                raise PeeringConnectionInvalidState(operation, error_message)
             else:
                 raise UnknownAWSClientError(error_code)
         else:
